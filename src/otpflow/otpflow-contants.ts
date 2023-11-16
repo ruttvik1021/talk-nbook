@@ -13,6 +13,6 @@ export const otpMessages = {
     EMAIL_MUST_BE_VALID: 'Email must be valid',
   },
   messages: {
-    OTP_SENT: 'OTP sent successfully',
+    OTP_SENT: 'Otp sent successfully',
   },
 };

@@ -10,6 +10,9 @@ export class SendOtp {
 
   @Prop({ required: true })
   validTill: Date;
+
+  @Prop({ required: true })
+  otp: number;
 }
 
 export type SendOtpDocument = SendOtp & Document;
