@@ -16,3 +16,9 @@ export const otpMessages = {
     OTP_SENT: 'Otp sent successfully',
   },
 };
+
+export const userMessages = {
+  errors: {
+    EMAIL_MUST_BE_VALID: 'Email must be valid',
+  },
+};

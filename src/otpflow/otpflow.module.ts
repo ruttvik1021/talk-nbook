@@ -8,12 +8,14 @@ import {
   VALIDATE_OTP_MODEL,
   ValidateOtpSchema,
 } from 'src/schemas/validateotp-schema';
+import { USER_MODEL, UserSchema } from 'src/schemas/user-schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: SEND_OTP_MODEL, schema: SendOtpSchema },
       { name: VALIDATE_OTP_MODEL, schema: ValidateOtpSchema },
+      { name: USER_MODEL, schema: UserSchema },
     ]),
     ConfigModule.forRoot(),
   ],

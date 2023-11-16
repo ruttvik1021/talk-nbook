@@ -1,5 +1,5 @@
 import { IsEmail, IsInt } from 'class-validator';
-import { otpMessages } from 'src/otpflow/otpflow-contants';
+import { otpMessages } from '../constants';
 
 export class SendOtpDTO {
   @IsEmail({}, { message: otpMessages.errors.EMAIL_MUST_BE_VALID })
