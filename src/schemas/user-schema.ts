@@ -6,40 +6,40 @@ import { Document } from 'mongoose';
 })
 export class Users {
   @Prop({ required: true })
-  email: string;
+  email: String;
 
   @Prop({ default: '' })
-  mobileNumber: string;
+  mobileNumber: String;
 
   @Prop({ default: '' })
-  name: string;
+  name: String;
 
   @Prop({ default: false })
-  isActive: boolean;
+  isActive: Boolean;
 
   @Prop({ default: null })
-  role: string;
+  role: String;
 
   @Prop({ default: '' })
-  dateOfBirth: string;
+  dateOfBirth: String;
 
   @Prop({ default: '' })
-  gender: string;
+  gender: String;
 
   @Prop()
-  profilePicType: string;
+  profilePicType: String;
 
   @Prop()
-  profilePic: string;
+  profilePic: String;
 
   @Prop()
-  preferences: string[];
+  preferences: String[];
 
   @Prop()
-  languages: string[];
+  languages: String[];
 
   @Prop({ required: true, default: false })
-  isProfileComplete: boolean;
+  isProfileComplete: Boolean;
 }
 
 export type UserDocument = Users & Document;

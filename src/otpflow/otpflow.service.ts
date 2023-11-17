@@ -1,15 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { createUserDTO } from 'src/dtos/userDto';
 import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
-import { otpMessages } from './../constants';
+import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import {
   VALIDATE_OTP_MODEL,
   ValidateOtpDocument,
 } from 'src/schemas/validateotp-schema';
-import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
-import { GENDER, createUserDTO } from 'src/dtos/userDto';
+import { otpMessages } from './../constants';
 
 @Injectable()
 export class OtpflowService {
@@ -24,6 +25,8 @@ export class OtpflowService {
     private readonly userModel: Model<UserDocument>,
 
     private readonly configService: ConfigService,
+
+    private readonly jwtService: JwtService,
   ) {}
 
   async sendOtpToUser(userEmail: string) {
@@ -80,16 +83,25 @@ export class OtpflowService {
     const user = await this.userModel.findOne({ email: email });
     if (!user) {
       const createdUser = await this.userModel.create({ email: email });
+
+      const accessToken = await this.jwtService.signAsync({
+        email: createdUser.email,
+      });
+
       if (createdUser) {
         return {
-          accessToken: createdUser.email,
+          accessToken: accessToken,
           isProfileComplete: false,
         };
       }
     }
 
+    const accessToken = await this.jwtService.signAsync({
+      email: user.email,
+    });
+
     return {
-      accessToken: user.email,
+      accessToken: accessToken,
       isProfileCompleted: user.isProfileComplete,
     };
   }

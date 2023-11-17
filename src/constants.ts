@@ -17,8 +17,23 @@ export const otpMessages = {
   },
 };
 
+export const languagesMessages = {
+  errors: {
+    languageExist: 'Language already exist',
+    errorWhileAddingLanguage: 'Error while adding language',
+  },
+  messages: {
+    addedSuccessfully: 'Language Added Successfully',
+  },
+};
+
 export const userMessages = {
   errors: {
     EMAIL_MUST_BE_VALID: 'Email must be valid',
   },
+};
+
+export const jwtConstants = {
+  secret: process.env.jwtSecret!,
+  expiresIn: process.env.jwtExpiresIn!,
 };

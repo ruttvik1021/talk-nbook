@@ -6,13 +6,13 @@ import { Document } from 'mongoose';
 })
 export class SendOtp {
   @Prop({ required: true })
-  email: string;
+  email: String;
 
   @Prop({ required: true })
   validTill: Date;
 
   @Prop({ required: true })
-  otp: number;
+  otp: Number;
 }
 
 export type SendOtpDocument = SendOtp & Document;

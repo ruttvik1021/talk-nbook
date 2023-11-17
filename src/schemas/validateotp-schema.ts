@@ -6,10 +6,10 @@ import { Document } from 'mongoose';
 })
 export class ValidateOtp {
   @Prop()
-  email: string;
+  email: String;
 
   @Prop()
-  otp: number;
+  otp: Number;
 }
 
 export type ValidateOtpDocument = ValidateOtp & Document;
