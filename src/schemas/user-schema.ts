@@ -3,6 +3,15 @@ import { Document } from 'mongoose';
 
 @Schema({
   timestamps: true,
+  toJSON: {
+    transform: function (doc, ret) {
+      // Exclude fields when converting the document to JSON
+      ret.id = ret._id;
+      delete ret.createdAt;
+      delete ret.updatedAt;
+      delete ret.__v;
+    },
+  },
 })
 export class Users {
   @Prop({ required: true })
@@ -17,7 +26,7 @@ export class Users {
   @Prop({ default: false })
   isActive: Boolean;
 
-  @Prop({ default: null })
+  @Prop({ default: '' })
   role: String;
 
   @Prop({ default: '' })

@@ -27,6 +27,16 @@ export const languagesMessages = {
   },
 };
 
+export const categoryMessages = {
+  errors: {
+    categoryExist: 'Category already exist',
+    errorWhileAddingCategory: 'Error while adding category',
+  },
+  messages: {
+    addedSuccessfully: 'Category Added Successfully',
+  },
+};
+
 export const userMessages = {
   errors: {
     emailMustBeValid: 'Email must be valid',

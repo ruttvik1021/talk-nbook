@@ -86,6 +86,7 @@ export class OtpflowService {
 
       const accessToken = await this.jwtService.signAsync({
         email: createdUser.email,
+        role: '',
       });
 
       if (createdUser) {
@@ -98,6 +99,7 @@ export class OtpflowService {
 
     const accessToken = await this.jwtService.signAsync({
       email: user.email,
+      role: user.role,
     });
 
     return {

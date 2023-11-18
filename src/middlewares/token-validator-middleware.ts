@@ -11,7 +11,7 @@ export class TokenValidator implements NestMiddleware {
     private readonly configService: ConfigService, // Inject ConfigService
   ) {}
 
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: decodedRequest, res: Response, next: NextFunction) {
     const { headers } = req;
     const authorizationHeader = headers.authorization;
 
@@ -32,7 +32,7 @@ export class TokenValidator implements NestMiddleware {
 
     try {
       const decodedToken = this.jwtService.verify(token, { secret });
-      req.body.decodedToken = decodedToken;
+      req.user = decodedToken;
       // You can access the decoded token properties if needed
       // For example: const userId = decodedToken.sub;
       next();
@@ -43,3 +43,9 @@ export class TokenValidator implements NestMiddleware {
     }
   }
 }
+
+type TokenReq = {
+  user?: any;
+};
+
+export type decodedRequest = TokenReq & Request;

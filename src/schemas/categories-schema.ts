@@ -14,16 +14,16 @@ import { Document } from 'mongoose';
     },
   },
 })
-export class Language {
-  @Prop({ required: true })
-  language: String;
+export class Categories {
+  @Prop({ type: String, required: true })
+  category: string;
 
   @Prop({ default: true })
   isActive: Boolean;
 }
 
-export type LanguageDocument = Language & Document;
+export type CategoryDocument = Categories & Document;
 
-export const LanguageSchema = SchemaFactory.createForClass(Language);
+export const CategorySchema = SchemaFactory.createForClass(Categories);
 
-export const LANGUAGE_MODEL = Language.name;
+export const CATEGORY_MODEL = Categories.name;
