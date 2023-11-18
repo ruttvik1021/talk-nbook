@@ -26,12 +26,12 @@ class CERTIFICATIONS {
 }
 
 export class createUserDTO {
-  @IsEmail({}, { message: userMessages.errors.EMAIL_MUST_BE_VALID })
+  @IsEmail({}, { message: userMessages.errors.emailMustBeValid })
   email: string;
 }
 
 export class updateUserDTO {
-  @IsEmail({}, { message: userMessages.errors.EMAIL_MUST_BE_VALID })
+  @IsEmail({}, { message: userMessages.errors.emailMustBeValid })
   email: string;
 
   @IsNumberString()
