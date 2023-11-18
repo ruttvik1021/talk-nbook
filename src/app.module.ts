@@ -1,23 +1,25 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { MasterDataModule } from './master-data/master-data.module';
 import { TokenValidator } from './middlewares/token-validator-middleware';
 import { OtpflowModule } from './otpflow/otpflow.module';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { UserModule } from './user/user.module';
-import { MasterDataModule } from './master-data/master-data.module';
 
 @Module({
   imports: [
     OtpflowModule,
     ConfigModule.forRoot(),
-    JwtModule.register({
-      global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
+      }),
+      inject: [ConfigService],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -45,9 +47,8 @@ import { MasterDataModule } from './master-data/master-data.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
-// // export class AppModule implements NestModule {
-// //   configure(consumer: MiddlewareConsumer) {
-// //     consumer.apply(TokenValidator).exclude('/otp').forRoutes('*');
-// //   }
-// }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(TokenValidator).exclude('/otp/**').forRoutes('/api/**');
+  }
+}

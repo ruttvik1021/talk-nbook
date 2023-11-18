@@ -1,19 +1,19 @@
 export const otpMessages = {
   errors: {
-    OTP_EXPIRED: 'Otp expired',
-    NO_USER_FOUND: 'No user found',
-    WRONG_OTP: 'Wrong otp',
-    ACTIVE_SESSION_FOUND:
+    otpExpired: 'Otp expired',
+    noUserFound: 'No user found',
+    wrongOtp: 'Wrong otp',
+    activeSeesionFound:
       'Active Session Found, please logout from other sessions',
-    USER_INACTIVE: 'User inactive',
-    ERROR_CREATING_USER: 'Error creating user',
-    CONTACT_ADMIN: 'Contact admin for more help.',
-    SOMETHING_WENT_WRONG: 'Something went wrong',
-    OTP_ALREADY_SENT: 'Otp already sent',
-    EMAIL_MUST_BE_VALID: 'Email must be valid',
+    userInactive: 'User inactive',
+    errorCreatingUser: 'Error creating user',
+    contactAdmin: 'Contact admin for more help.',
+    somethingWentWrong: 'Something went wrong',
+    orpAlreadySent: 'Otp already sent',
+    emailMustBeValid: 'Email must be valid',
   },
   messages: {
-    OTP_SENT: 'Otp sent successfully',
+    otpSent: 'Otp sent successfully',
   },
 };
 
@@ -29,11 +29,19 @@ export const languagesMessages = {
 
 export const userMessages = {
   errors: {
-    EMAIL_MUST_BE_VALID: 'Email must be valid',
+    emailMustBeValid: 'Email must be valid',
   },
 };
 
 export const jwtConstants = {
   secret: process.env.jwtSecret!,
   expiresIn: process.env.jwtExpiresIn!,
+};
+
+export const authenticationConstants = {
+  errors: {
+    missingAuthHeaders: 'Unauthorized - Missing Authorization Header',
+    invalidAuthHeaderFormat:
+      'Unauthorized - Invalid Authorization Header Format',
+  },
 };

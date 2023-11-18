@@ -41,15 +41,15 @@ export class OtpflowService {
         otp: generatedOtp,
       });
       if (!otpSent)
-        throw new BadRequestException(otpMessages.errors.SOMETHING_WENT_WRONG);
+        throw new BadRequestException(otpMessages.errors.somethingWentWrong);
       return {
-        message: otpMessages.messages.OTP_SENT,
+        message: otpMessages.messages.otpSent,
         validfor: validSeconds,
         otp: generatedOtp,
       };
     }
     if (new Date(getEmailLog.validTill) > new Date()) {
-      throw new BadRequestException(otpMessages.errors.OTP_ALREADY_SENT);
+      throw new BadRequestException(otpMessages.errors.orpAlreadySent);
     }
     const updatedOtp = await this.sendOtpModel.findOneAndUpdate(
       {
@@ -61,9 +61,9 @@ export class OtpflowService {
       },
     );
     if (!updatedOtp)
-      throw new BadRequestException(otpMessages.errors.SOMETHING_WENT_WRONG);
+      throw new BadRequestException(otpMessages.errors.somethingWentWrong);
     return {
-      message: otpMessages.messages.OTP_SENT,
+      message: otpMessages.messages.otpSent,
       validfor: validSeconds,
       otp: generatedOtp,
     };
@@ -73,11 +73,11 @@ export class OtpflowService {
     const getEmailLog = await this.sendOtpModel.findOne({ email: email });
 
     if (getEmailLog.otp !== otp) {
-      throw new BadRequestException(otpMessages.errors.WRONG_OTP);
+      throw new BadRequestException(otpMessages.errors.wrongOtp);
     }
 
     if (new Date(getEmailLog.validTill) < new Date()) {
-      throw new BadRequestException(otpMessages.errors.OTP_EXPIRED);
+      throw new BadRequestException(otpMessages.errors.otpExpired);
     }
 
     const user = await this.userModel.findOne({ email: email });
@@ -108,7 +108,7 @@ export class OtpflowService {
 
   async sendToken(userEmail: string) {
     const user = await this.userModel.findOne({ email: userEmail });
-    if (!user) throw new BadRequestException(otpMessages.errors.NO_USER_FOUND);
+    if (!user) throw new BadRequestException(otpMessages.errors.noUserFound);
     return { ...user };
   }
 

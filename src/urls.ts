@@ -4,16 +4,19 @@ export const otpFlowUrls = {
   validateOtp: '/validateotp',
 };
 
+export const authorizedUrls = '/api';
+
 export const userUrls = {
-  getUsersList: '/allUsers',
-  getUserById: '/user/:id',
-  userRoles: '/user/roles',
-  getAllLanguages: '/getAllLanguages',
-  getAllSpecilization: '/getAllSpecializations',
+  getUsersList: `/allUsers`,
+  getUserById: `/user/:id`,
+  userRoles: `/user/roles`,
+  getAllLanguages: `/getAllLanguages`,
+  getAllSpecilization: `/getAllSpecializations`,
 };
 
+export const masterAuthorizedBaseUrls = '/api/master';
+
 export const masterDataUrls = {
-  masterBaseUrl: '/api/master',
   specializations: '/specialization',
   languages: '/languages',
   roles: '/roles',

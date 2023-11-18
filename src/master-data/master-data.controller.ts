@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { masterDataUrls } from 'src/urls';
+import { masterAuthorizedBaseUrls, masterDataUrls } from 'src/urls';
 import { MasterDataService } from './master-data.service';
 import { AddLanguageDTO } from 'src/dtos/addLanguageDto';
+import { Request } from 'express';
 
-@Controller(masterDataUrls.masterBaseUrl)
+@Controller(masterAuthorizedBaseUrls)
 export class MasterDataController {
   constructor(private masterService: MasterDataService) {}
   @Get(masterDataUrls.languages)
@@ -11,7 +12,8 @@ export class MasterDataController {
     return this.masterService.getAllLanguages();
   }
   @Post(masterDataUrls.languages)
-  async addnewLanguage(@Body() body: AddLanguageDTO) {
+  async addnewLanguage(@Body() body: AddLanguageDTO, req: Request) {
+    console.log('req', req);
     return this.masterService.addNewLanguage(body);
   }
 }

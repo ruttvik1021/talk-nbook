@@ -1,27 +1,45 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
+import { ConfigService } from '@nestjs/config'; // Import ConfigService
+import { authenticationConstants } from 'src/constants';
 
 @Injectable()
 export class TokenValidator implements NestMiddleware {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService, // Inject ConfigService
+  ) {}
+
   use(req: Request, res: Response, next: NextFunction) {
     const { headers } = req;
-    const token = headers.authorization?.split(' ')[1] || '';
-    const secret = process.env.JWT_SECRET! || '';
+    const authorizationHeader = headers.authorization;
 
-    console.log({ token, secret });
+    if (!authorizationHeader) {
+      return res
+        .status(401)
+        .json({ message: authenticationConstants.errors.missingAuthHeaders });
+    }
+
+    const [bearer, token] = authorizationHeader.split(' ');
+
+    if (bearer !== 'Bearer' || !token) {
+      return res.status(401).json({
+        message: authenticationConstants.errors.invalidAuthHeaderFormat,
+      });
+    }
+    const secret = this.configService.get<string>('JWT_SECRET') || ''; // Get JWT_SECRET from environment
+
     try {
-      const decodedToken = this.jwtService.verify(token, { secret: secret });
-      console.log(decodedToken);
+      const decodedToken = this.jwtService.verify(token, { secret });
+      req.body.decodedToken = decodedToken;
       // You can access the decoded token properties if needed
       // For example: const userId = decodedToken.sub;
       next();
     } catch (error) {
-      console.log(error);
+      console.error('Token Verification Error:', error.message);
       // Handle token verification failure (e.g., unauthorized access)
       return res.status(401).json({ message: 'Unauthorized' });
     }
-    next();
   }
 }
