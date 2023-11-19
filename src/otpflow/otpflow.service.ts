@@ -72,6 +72,8 @@ export class OtpflowService {
   async validateOtp({ email, otp }: { email: string; otp: number }) {
     const getEmailLog = await this.sendOtpModel.findOne({ email: email });
 
+    if(!getEmailLog) { throw new BadRequestException(otpMessages.errors.noUserFound) }
+
     if (getEmailLog.otp !== otp) {
       throw new BadRequestException(otpMessages.errors.wrongOtp);
     }
