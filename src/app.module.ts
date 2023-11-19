@@ -33,7 +33,7 @@ import { UserModule } from './user/user.module';
           return { uri: localDb };
         }
 
-        if (envType === 'Dev') {
+        if (envType === 'Development') {
           return { uri: devDb };
         }
 
