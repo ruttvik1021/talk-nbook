@@ -122,7 +122,7 @@ export class MasterDataService {
     if (isPresent)
       throw new BadRequestException(categoryMessages.errors.categoryExist);
 
-    const newCategory = this.categoryModel.create({
+    const newCategory = await this.categoryModel.create({
       category: category,
     });
     if (!newCategory) {
