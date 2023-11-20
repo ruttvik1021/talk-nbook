@@ -23,7 +23,7 @@ export const languagesMessages = {
     errorWhileAddingLanguage: 'Error while adding language',
     errorWhileUpdatingLanguage: 'Error while updating language',
     errorWhileDeletingLanguage: 'Error while deleting language',
-    languageNotfound: 'Language not found',
+    languageNotFound: 'Language not found',
     usedByUser: 'Used by user'
   },
   messages: {
