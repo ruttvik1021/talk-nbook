@@ -63,12 +63,12 @@ export class MasterDataService {
     id: string,
   ) {
     const existingDoc = await this.languageModel.findById(id);
-    if (!existingDoc) throw new BadRequestException('Language not found');
+    if (!existingDoc) throw new BadRequestException(languagesMessages.errors.languageNotFound);
     const usersHavingLanguage = await this.userModel.find({
       languages: { $in: [id] },
     });
     if (usersHavingLanguage.length && body.language !== existingDoc.language) {
-      throw new BadRequestException('Used by user');
+      throw new BadRequestException(languagesMessages.errors.usedByUser);
     }
 
     const updatedLanguage = await this.languageModel.findByIdAndUpdate(
@@ -77,9 +77,9 @@ export class MasterDataService {
       { returnOriginal: false },
     );
     if (!updatedLanguage)
-      throw new BadRequestException('Error while updating language');
+      throw new BadRequestException(languagesMessages.errors.errorWhileUpdatingLanguage);
     return {
-      message: 'Language Updated Successfully',
+      message: languagesMessages.messages.updatedSuccessfully,
       data: updatedLanguage,
     };
   }
@@ -95,18 +95,18 @@ export class MasterDataService {
         { returnOriginal: false },
       );
       if (!updatedLanguage)
-        throw new BadRequestException('Error while updating Language');
+        throw new BadRequestException(languagesMessages.errors.errorWhileUpdatingLanguage);
       return {
-        message: 'Language Used, Deactived Language',
+        message: languagesMessages.messages.languageUsedDeactivatedLanguage,
         data: updatedLanguage,
       };
     }
 
     const deleteLangauge = await this.languageModel.findByIdAndDelete(id);
     if (!deleteLangauge)
-      throw new BadRequestException('Error while deleting language');
+      throw new BadRequestException(languagesMessages.errors.errorWhileDeletingLanguage);
     return {
-      message: 'Language deleted',
+      message: languagesMessages.messages.deletedSuccessfully,
     };
   }
 

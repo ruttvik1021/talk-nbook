@@ -21,9 +21,16 @@ export const languagesMessages = {
   errors: {
     languageExist: 'Language already exist',
     errorWhileAddingLanguage: 'Error while adding language',
+    errorWhileUpdatingLanguage: 'Error while updating language',
+    errorWhileDeletingLanguage: 'Error while deleting language',
+    languageNotfound: 'Language not found',
+    usedByUser: 'Used by user'
   },
   messages: {
     addedSuccessfully: 'Language Added Successfully',
+    updatedSuccessfully: 'Language Updated Successfully',
+    deletedSuccessfully: 'Language Deleted Successfully',
+    languageUsedDeactivatedLanguage: 'Language Used, Deactived Language'
   },
 };
 
