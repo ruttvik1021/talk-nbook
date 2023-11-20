@@ -1,16 +1,21 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { languagesMessages, specializationMessages } from 'src/constants';
 
 export class AddLanguageDTO {
+  @IsNotEmpty()
   @IsString()
+  @Matches(/\S/, { message: languagesMessages.errors.mustNotBeEmpty })
   language: string;
 
   @IsBoolean()
   isActive?: boolean;
 }
 
-export class AddCategoryDTO {
+export class AddSpecializationDTO {
+  @IsNotEmpty()
   @IsString()
-  category: string;
+  @Matches(/\S/, { message: specializationMessages.errors.mustNotBeEmpty })
+  specialization: string;
 
   @IsBoolean()
   isActive?: boolean;

@@ -1,19 +1,15 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { categoryMessages, languagesMessages } from 'src/constants';
+import { languagesMessages, specializationMessages } from 'src/constants';
+import { AddLanguageDTO, AddSpecializationDTO } from 'src/dtos/masterDto';
+import { RoleEnums } from 'src/enums';
+import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
-  CATEGORY_MODEL,
-  CategoryDocument,
+  SPECIALIZATION_MODEL,
+  SpecializationDocument,
 } from 'src/schemas/categories-schema';
 import { LANGUAGE_MODEL, LanguageDocument } from 'src/schemas/language-schema';
-import { Request } from 'express';
-import { decodedRequest } from 'src/middlewares/token-validator-middleware';
-import { RoleEnums } from 'src/enums';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 
 @Injectable()
@@ -22,8 +18,8 @@ export class MasterDataService {
     @InjectModel(LANGUAGE_MODEL)
     private readonly languageModel: Model<LanguageDocument>,
 
-    @InjectModel(CATEGORY_MODEL)
-    private readonly categoryModel: Model<CategoryDocument>,
+    @InjectModel(SPECIALIZATION_MODEL)
+    private readonly specializationModel: Model<SpecializationDocument>,
 
     @InjectModel(USER_MODEL) private readonly userModel: Model<UserDocument>,
   ) {}
@@ -35,7 +31,7 @@ export class MasterDataService {
     return languages;
   }
 
-  async addNewLanguage(body: { language: string; isActive?: boolean }) {
+  async addNewLanguage(body: AddLanguageDTO) {
     const language = await this.languageModel.findOne({
       language: body.language,
     });
@@ -58,12 +54,10 @@ export class MasterDataService {
     };
   }
 
-  async updateLanguage(
-    body: { language: string; isActive?: boolean },
-    id: string,
-  ) {
+  async updateLanguage(body: AddLanguageDTO, id: string) {
     const existingDoc = await this.languageModel.findById(id);
-    if (!existingDoc) throw new BadRequestException(languagesMessages.errors.languageNotFound);
+    if (!existingDoc)
+      throw new BadRequestException(languagesMessages.errors.languageNotFound);
     const usersHavingLanguage = await this.userModel.find({
       languages: { $in: [id] },
     });
@@ -77,7 +71,9 @@ export class MasterDataService {
       { returnOriginal: false },
     );
     if (!updatedLanguage)
-      throw new BadRequestException(languagesMessages.errors.errorWhileUpdatingLanguage);
+      throw new BadRequestException(
+        languagesMessages.errors.errorWhileUpdatingLanguage,
+      );
     return {
       message: languagesMessages.messages.updatedSuccessfully,
       data: updatedLanguage,
@@ -95,7 +91,9 @@ export class MasterDataService {
         { returnOriginal: false },
       );
       if (!updatedLanguage)
-        throw new BadRequestException(languagesMessages.errors.errorWhileUpdatingLanguage);
+        throw new BadRequestException(
+          languagesMessages.errors.errorWhileUpdatingLanguage,
+        );
       return {
         message: languagesMessages.messages.languageUsedDeactivatedLanguage,
         data: updatedLanguage,
@@ -104,35 +102,106 @@ export class MasterDataService {
 
     const deleteLangauge = await this.languageModel.findByIdAndDelete(id);
     if (!deleteLangauge)
-      throw new BadRequestException(languagesMessages.errors.errorWhileDeletingLanguage);
+      throw new BadRequestException(
+        languagesMessages.errors.errorWhileDeletingLanguage,
+      );
     return {
       message: languagesMessages.messages.deletedSuccessfully,
     };
   }
 
-  async getAllCategories(req: decodedRequest) {
+  async getAllSpecializations(req: decodedRequest) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
     const query = isSuperAdmin ? {} : { isActive: true };
-    const categories = this.categoryModel.find({ query });
-    return categories;
+    const specializations = this.specializationModel.find({ query });
+    return specializations;
   }
 
-  async addNewCategory({ category }: { category: string }) {
-    const isPresent = await this.categoryModel.findOne({ category });
-    if (isPresent)
-      throw new BadRequestException(categoryMessages.errors.categoryExist);
-
-    const newCategory = await this.categoryModel.create({
-      category: category,
+  async addNewSpecialization(body: AddSpecializationDTO) {
+    const isPresent = await this.specializationModel.findOne({
+      specialization: body.specialization,
     });
-    if (!newCategory) {
+    if (isPresent)
       throw new BadRequestException(
-        categoryMessages.errors.errorWhileAddingCategory,
+        specializationMessages.errors.specializationExist,
+      );
+
+    const newSpecialization = await this.specializationModel.create({
+      specialization: body.specialization,
+    });
+    if (!newSpecialization) {
+      throw new BadRequestException(
+        specializationMessages.errors.specializationExist,
       );
     }
     return {
-      message: categoryMessages.messages.addedSuccessfully,
-      data: newCategory,
+      message: specializationMessages.messages.addedSuccessfully,
+      data: newSpecialization,
+    };
+  }
+
+  async updateSpecialization(body: AddSpecializationDTO, id: string) {
+    const existingDoc = await this.specializationModel.findById(id);
+    if (!existingDoc)
+      throw new BadRequestException(
+        specializationMessages.errors.specializationExist,
+      );
+    const usersHavingLanguage = await this.userModel.find({
+      specializations: { $in: [id] },
+    });
+    if (
+      usersHavingLanguage.length &&
+      body.specialization !== existingDoc.specialization
+    ) {
+      throw new BadRequestException(specializationMessages.errors.usedByUser);
+    }
+
+    const updatedSpecialization =
+      await this.specializationModel.findByIdAndUpdate(
+        { _id: id },
+        { ...body },
+        { returnOriginal: false },
+      );
+    if (!updatedSpecialization)
+      throw new BadRequestException(
+        specializationMessages.errors.errorWhileUpdatingSpecialization,
+      );
+    return {
+      message: specializationMessages.messages.updatedSuccessfully,
+      data: updatedSpecialization,
+    };
+  }
+
+  async deleteSpecialization(id: string) {
+    const usersHavingSpecialization = await this.userModel.find({
+      specializations: { $in: [id] },
+    });
+    if (usersHavingSpecialization.length) {
+      const updatedSpecialization =
+        await this.specializationModel.findByIdAndUpdate(
+          { _id: id },
+          { $set: { isActive: false } },
+          { returnOriginal: false },
+        );
+      if (!updatedSpecialization)
+        throw new BadRequestException(
+          specializationMessages.errors.errorWhileUpdatingSpecialization,
+        );
+      return {
+        message:
+          specializationMessages.messages.specializationUsedDeactivatedLanguage,
+        data: updatedSpecialization,
+      };
+    }
+
+    const deleteSpecialization =
+      await this.specializationModel.findByIdAndDelete(id);
+    if (!deleteSpecialization)
+      throw new BadRequestException(
+        specializationMessages.errors.errorWhileDeletingSpecialization,
+      );
+    return {
+      message: specializationMessages.messages.deletedSuccessfully,
     };
   }
 }

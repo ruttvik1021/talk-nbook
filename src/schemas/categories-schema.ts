@@ -14,16 +14,17 @@ import { Document } from 'mongoose';
     },
   },
 })
-export class Categories {
-  @Prop({ type: String, required: true })
-  category: string;
+export class Specialization {
+  @Prop({ required: true })
+  specialization: String;
 
   @Prop({ default: true })
   isActive: Boolean;
 }
 
-export type CategoryDocument = Categories & Document;
+export type SpecializationDocument = Specialization & Document;
 
-export const CategorySchema = SchemaFactory.createForClass(Categories);
+export const SpecializationSchema =
+  SchemaFactory.createForClass(Specialization);
 
-export const CATEGORY_MODEL = Categories.name;
+export const SPECIALIZATION_MODEL = Specialization.name;

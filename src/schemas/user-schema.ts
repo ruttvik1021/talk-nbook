@@ -49,6 +49,9 @@ export class Users {
 
   @Prop({ required: true, default: false })
   isProfileComplete: Boolean;
+
+  @Prop()
+  specializations: string[];
 }
 
 export type UserDocument = Users & Document;

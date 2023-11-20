@@ -24,23 +24,33 @@ export const languagesMessages = {
     errorWhileUpdatingLanguage: 'Error while updating language',
     errorWhileDeletingLanguage: 'Error while deleting language',
     languageNotFound: 'Language not found',
-    usedByUser: 'Used by user'
+    usedByUser: 'Used by user',
+    mustNotBeEmpty: 'Must not be empty',
   },
   messages: {
     addedSuccessfully: 'Language Added Successfully',
     updatedSuccessfully: 'Language Updated Successfully',
     deletedSuccessfully: 'Language Deleted Successfully',
-    languageUsedDeactivatedLanguage: 'Language Used, Deactived Language'
+    languageUsedDeactivatedLanguage: 'Language Used, Deactived Language',
   },
 };
 
-export const categoryMessages = {
+export const specializationMessages = {
   errors: {
-    categoryExist: 'Category already exist',
-    errorWhileAddingCategory: 'Error while adding category',
+    specializationExist: 'Specialization already exist',
+    errorWhileAddingSpecialization: 'Error while adding specialization',
+    errorWhileUpdatingSpecialization: 'Error while updating specialization',
+    errorWhileDeletingSpecialization: 'Error while deleting specialization',
+    specializationNotFound: 'Specialization not found',
+    usedByUser: 'Specialization used by user',
+    mustNotBeEmpty: 'Must not be empty',
   },
   messages: {
-    addedSuccessfully: 'Category Added Successfully',
+    addedSuccessfully: 'Specialization Added Successfully',
+    updatedSuccessfully: 'Specialization Updated Successfully',
+    deletedSuccessfully: 'Specialization Deleted Successfully',
+    specializationUsedDeactivatedLanguage:
+      'Specialization Used, Deactived Specialization',
   },
 };
 
@@ -60,5 +70,11 @@ export const authenticationConstants = {
     missingAuthHeaders: 'Unauthorized - Missing Authorization Header',
     invalidAuthHeaderFormat:
       'Unauthorized - Invalid Authorization Header Format',
+  },
+};
+
+export const commonMessages = {
+  errors: {
+    notValidId: 'Id not valid',
   },
 };

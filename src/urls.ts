@@ -17,8 +17,8 @@ export const userUrls = {
 export const masterAuthorizedBaseUrls = '/api/master';
 
 export const masterDataUrls = {
-  categories: '/categories',
-  updateCategory: '/category/:id',
+  specializations: '/specializations',
+  updateSpecialization: '/specialization/:id',
   languages: '/languages',
   updateLanguage: '/language/:id',
   roles: '/roles',
