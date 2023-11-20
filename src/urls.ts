@@ -7,6 +7,7 @@ export const otpFlowUrls = {
 export const authorizedUrls = '/api';
 
 export const userUrls = {
+  getProfile: '/getprofile',
   getUsersList: `/allUsers`,
   getUserById: `/user/:id`,
   userRoles: `/user/roles`,

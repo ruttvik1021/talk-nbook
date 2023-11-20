@@ -11,6 +11,7 @@ export const otpMessages = {
     somethingWentWrong: 'Something went wrong',
     orpAlreadySent: 'Otp already sent',
     emailMustBeValid: 'Email must be valid',
+    otpNotSentYet: 'Otp not sent yet',
   },
   messages: {
     otpSent: 'Otp sent successfully',
@@ -57,6 +58,17 @@ export const specializationMessages = {
 export const userMessages = {
   errors: {
     emailMustBeValid: 'Email must be valid',
+    specializationMustBeAtleastOne: 'Specialization must be atleast one',
+    languagesMustBeAtleastOne: 'Languages must be atleast one',
+    mobileNumberRequired: 'Mobile number is required',
+    mobileNumberMustBe10Digits: 'Mobile number must be 10 digits',
+    noUserFound: 'No user found',
+    emailCannotBeUpdated: 'Email cannot be updated',
+    invalidIdInPreferences: 'Invalid Id in preferences',
+    invalidIdInLanguages: 'Invalid Id in languages',
+  },
+  messages: {
+    userUpdated: 'User Updated',
   },
 };
 

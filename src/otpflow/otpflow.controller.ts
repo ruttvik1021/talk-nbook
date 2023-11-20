@@ -13,7 +13,6 @@ export class OtpflowController {
 
   @Post(otpFlowUrls.validateOtp)
   validateOtp(@Body() body: ValidateOtpDTO) {
-    const isOtpValid = this.otpFlow.validateOtp(body);
-    return isOtpValid;
+    return this.otpFlow.validateOtp(body);
   }
 }

@@ -3,23 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { createUserDTO } from 'src/dtos/userDto';
 import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
-import {
-  VALIDATE_OTP_MODEL,
-  ValidateOtpDocument,
-} from 'src/schemas/validateotp-schema';
 import { otpMessages } from './../constants';
+import { RoleEnums } from 'src/enums';
 
 @Injectable()
 export class OtpflowService {
   constructor(
     @InjectModel(SEND_OTP_MODEL)
     private readonly sendOtpModel: Model<SendOtpDocument>,
-
-    @InjectModel(VALIDATE_OTP_MODEL)
-    private readonly validateOtpModel: Model<ValidateOtpDocument>,
 
     @InjectModel(USER_MODEL)
     private readonly userModel: Model<UserDocument>,
@@ -72,7 +65,9 @@ export class OtpflowService {
   async validateOtp({ email, otp }: { email: string; otp: number }) {
     const getEmailLog = await this.sendOtpModel.findOne({ email: email });
 
-    if(!getEmailLog) { throw new BadRequestException(otpMessages.errors.noUserFound) }
+    if (!getEmailLog) {
+      throw new BadRequestException(otpMessages.errors.noUserFound);
+    }
 
     if (getEmailLog.otp !== otp) {
       throw new BadRequestException(otpMessages.errors.wrongOtp);
@@ -88,7 +83,7 @@ export class OtpflowService {
 
       const accessToken = await this.jwtService.signAsync({
         email: createdUser.email,
-        role: '',
+        role: RoleEnums.USER,
       });
 
       if (createdUser) {
@@ -108,16 +103,5 @@ export class OtpflowService {
       accessToken: accessToken,
       isProfileCompleted: user.isProfileComplete,
     };
-  }
-
-  async sendToken(userEmail: string) {
-    const user = await this.userModel.findOne({ email: userEmail });
-    if (!user) throw new BadRequestException(otpMessages.errors.noUserFound);
-    return { ...user };
-  }
-
-  async createUser(body: createUserDTO) {
-    // const user = await this.userModel.create({ ...body });
-    return { ...body };
   }
 }
