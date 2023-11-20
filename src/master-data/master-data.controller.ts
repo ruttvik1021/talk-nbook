@@ -8,6 +8,7 @@ import {
   Put,
   Req,
   UseGuards,
+  ParseUUIDPipe
 } from '@nestjs/common';
 import { masterAuthorizedBaseUrls, masterDataUrls } from 'src/urls';
 import { MasterDataService } from './master-data.service';
@@ -36,14 +37,14 @@ export class MasterDataController {
   @Roles([RoleEnums.SUPERADMIN])
   @UseGuards(RolesGuard)
   @Put(masterDataUrls.updateLanguage)
-  async updateLanguage(@Body() body: AddLanguageDTO, @Param('id') id: string) {
+  async updateLanguage(@Body() body: AddLanguageDTO, @Param('id', new ParseUUIDPipe()) id: string) {
     return this.masterService.updateLanguage(body, id);
   }
 
   @Roles([RoleEnums.SUPERADMIN])
   @UseGuards(RolesGuard)
   @Delete(masterDataUrls.updateLanguage)
-  async deleteLanguage(@Param('id') id: string) {
+  async deleteLanguage(@Param('id', new ParseUUIDPipe())  id: string) {
     return this.masterService.deleteLanguage(id);
   }
 
