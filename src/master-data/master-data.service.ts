@@ -113,7 +113,7 @@ export class MasterDataService {
   async getAllSpecializations(req: decodedRequest) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
     const query = isSuperAdmin ? {} : { isActive: true };
-    const specializations = this.specializationModel.find({ query });
+    const specializations = this.specializationModel.find(query);
     return specializations;
   }
 
