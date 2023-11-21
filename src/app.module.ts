@@ -4,10 +4,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MasterDataModule } from './master-data/master-data.module';
+import { MasterDataModule } from './modules/master-data/master-data.module';
 import { TokenValidator } from './middlewares/token-validator-middleware';
-import { OtpflowModule } from './otpflow/otpflow.module';
-import { UserModule } from './user/user.module';
+import { OtpflowModule } from './modules/otpflow/otpflow.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [

@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
-import { otpMessages } from './../constants';
+import { otpMessages } from '../../constants';
 import { RoleEnums } from 'src/enums';
 
 @Injectable()
