@@ -1,5 +1,5 @@
 import { IsEmail, IsInt } from 'class-validator';
-import { otpMessages } from '../constants';
+import { otpMessages } from '../utils/constants';
 
 export class SendOtpDTO {
   @IsEmail({}, { message: otpMessages.errors.emailMustBeValid })

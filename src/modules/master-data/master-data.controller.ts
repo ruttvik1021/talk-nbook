@@ -12,10 +12,10 @@ import {
 import { Request } from 'express';
 import { Roles } from 'src/decorators/roles.decorator';
 import { AddLanguageDTO, AddSpecializationDTO } from 'src/dtos/masterDto';
-import { RoleEnums } from 'src/enums';
+import { RoleEnums } from 'src/utils/enums';
 import { RolesGuard } from 'src/guards/role.guard';
 import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
-import { masterAuthorizedBaseUrls, masterDataUrls } from 'src/urls';
+import { masterAuthorizedBaseUrls, masterDataUrls } from 'src/utils/urls';
 import { MasterDataService } from './master-data.service';
 
 @Controller(masterAuthorizedBaseUrls)

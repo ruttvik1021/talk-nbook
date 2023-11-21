@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Put, Req } from '@nestjs/common';
-import { authorizedUrls, userUrls } from 'src/urls';
+import { authorizedUrls, userUrls } from 'src/utils/urls';
 import { UserService } from './user.service';
 import { Request } from 'express';
 import { UpdateUserDTO } from 'src/dtos/userDto';

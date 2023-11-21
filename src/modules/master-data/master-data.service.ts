@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { languagesMessages, specializationMessages } from 'src/constants';
+import { languagesMessages, specializationMessages } from 'src/utils/constants';
 import { AddLanguageDTO, AddSpecializationDTO } from 'src/dtos/masterDto';
-import { RoleEnums } from 'src/enums';
+import { RoleEnums } from 'src/utils/enums';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
   SPECIALIZATION_MODEL,
@@ -27,7 +27,9 @@ export class MasterDataService {
   async getAllLanguages(req: decodedRequest) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
     const query = isSuperAdmin ? {} : { isActive: true };
-    const languages = await this.languageModel.find(query);
+    const languages = await this.languageModel
+      .find(query)
+      .sort({ language: 1 });
     return languages;
   }
 
@@ -41,6 +43,7 @@ export class MasterDataService {
 
     const newLanguage = await this.languageModel.create({
       language: body.language,
+      isActive: true,
     });
     if (!newLanguage) {
       throw new BadRequestException(
@@ -113,7 +116,9 @@ export class MasterDataService {
   async getAllSpecializations(req: decodedRequest) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
     const query = isSuperAdmin ? {} : { isActive: true };
-    const specializations = this.specializationModel.find(query);
+    const specializations = this.specializationModel
+      .find(query)
+      .sort({ specialization: 1 });
     return specializations;
   }
 
@@ -128,6 +133,7 @@ export class MasterDataService {
 
     const newSpecialization = await this.specializationModel.create({
       specialization: body.specialization,
+      isActive: true,
     });
     if (!newSpecialization) {
       throw new BadRequestException(

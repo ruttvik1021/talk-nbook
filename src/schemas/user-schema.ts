@@ -52,6 +52,9 @@ export class Users {
   role: string;
 
   @Prop({ default: '' })
+  about: string;
+
+  @Prop({ default: '' })
   dateOfBirth: string;
 
   @Prop({ enum: GENDER })
@@ -68,6 +71,9 @@ export class Users {
 
   @Prop({ default: false })
   isServiceProvider: boolean;
+
+  @Prop({ default: false })
+  onSiteService: boolean;
 
   @Prop({ type: [Specialization] }) // Specify the array type
   @Prop({ required: false }) // If specializations can be empty

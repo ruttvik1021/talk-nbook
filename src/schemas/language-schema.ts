@@ -16,10 +16,10 @@ import { Document } from 'mongoose';
 })
 export class Language {
   @Prop({ required: true })
-  language: String;
+  language: string;
 
   @Prop({ default: true })
-  isActive: Boolean;
+  isActive: boolean;
 }
 
 export type LanguageDocument = Language & Document;

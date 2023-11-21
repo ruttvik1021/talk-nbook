@@ -66,6 +66,11 @@ export const userMessages = {
     emailCannotBeUpdated: 'Email cannot be updated',
     invalidIdInPreferences: 'Invalid Id in preferences',
     invalidIdInLanguages: 'Invalid Id in languages',
+    errorWhileSavingUser: 'Error while saving user',
+    mustBeInPattern:
+      'Mobilenumber must be in the format +{countrycode}-{number}.',
+    dateFormatIncorrect: 'Date format must be DD/MM/YYYY ',
+    maxLengthForAbout: 'Maximum characters exceeds',
   },
   messages: {
     userUpdated: 'User Updated',

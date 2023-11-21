@@ -5,21 +5,15 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsNumberString,
   IsString,
   Matches,
+  MaxLength,
   MinLength,
   ValidateIf,
-  ValidationArguments,
-  ValidationOptions,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-  isNotEmpty,
-  isString,
-  registerDecorator,
 } from 'class-validator';
-import { Types } from 'mongoose';
-import { userMessages } from 'src/constants';
+import { userMessages } from 'src/utils/constants';
+import { ArrayElementIsObjectId } from 'src/utils/validators/array-element-is-objectId-validator';
+import { IsDateFormatValid } from 'src/utils/validators/date-format-validator';
 
 export enum GENDER {
   MALE = 'MALE',
@@ -39,47 +33,19 @@ class Certifications {
 }
 
 class Specialization {
+  @IsString()
   specializationId: string;
+
+  @IsArray()
   certificates: Certifications[];
-}
-
-@ValidatorConstraint({ name: 'arrayElementIsObjectId', async: false })
-export class ArrayElementIsObjectIdConstraint
-  implements ValidatorConstraintInterface
-{
-  validate(value: any, args: ValidationArguments) {
-    if (!isNotEmpty(value) || !Array.isArray(value)) {
-      return false;
-    }
-
-    return value.every(
-      (element) => isString(element) && Types.ObjectId.isValid(element),
-    );
-  }
-
-  defaultMessage(args: ValidationArguments) {
-    return `$property must be an array where each element is a valid ObjectId`;
-  }
-}
-
-export function ArrayElementIsObjectId(validationOptions?: ValidationOptions) {
-  return function (object: Record<string, any>, propertyName: string): void {
-    registerDecorator({
-      target: object.constructor,
-      propertyName: propertyName,
-      options: validationOptions,
-      constraints: [],
-      validator: ArrayElementIsObjectIdConstraint,
-    });
-  };
 }
 
 export class UpdateUserDTO {
   @IsEmail({}, { message: userMessages.errors.emailMustBeValid })
   email: string;
 
-  @IsNumberString()
-  @MinLength(10, { message: userMessages.errors.mobileNumberMustBe10Digits })
+  @IsString()
+  @Matches(/^\+\d{1,}-\d+$/, { message: userMessages.errors.mustBeInPattern })
   mobileNumber: string;
 
   @IsString()
@@ -94,6 +60,13 @@ export class UpdateUserDTO {
   role: string;
 
   @IsString()
+  @MaxLength(255, { message: userMessages.errors.maxLengthForAbout })
+  about: string;
+
+  @IsString()
+  @IsDateFormatValid({
+    message: `Date of birth ${userMessages.errors.dateFormatIncorrect}`,
+  })
   dateOfBirth: string;
 
   @IsEnum(GENDER)
@@ -113,6 +86,10 @@ export class UpdateUserDTO {
 
   @IsBoolean()
   isServiceProvider: boolean;
+
+  @ValidateIf((o) => o.isServiceProvider === true)
+  @IsBoolean()
+  onSiteService: boolean;
 
   @IsArray()
   @ValidateIf((o) => o.isServiceProvider === true)

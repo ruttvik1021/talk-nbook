@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { otpMessages, userMessages } from 'src/constants';
 import { UpdateUserDTO } from 'src/dtos/userDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
+import { userMessages } from 'src/utils/constants';
 
 @Injectable()
 export class UserService {
@@ -12,10 +12,10 @@ export class UserService {
     @InjectModel(USER_MODEL) private readonly userModel: Model<UserDocument>,
   ) {}
   async getProfile(req: decodedRequest) {
-    const userDetails = await this.userModel.findOne(
-      { email: req.user.email },
-      { id: 0 },
-    );
+    const userDetails = await this.userModel.findOne({ email: req.user.email });
+    if (!userDetails)
+      throw new BadRequestException(userMessages.errors.noUserFound);
+    // userDetails.profilePic = byteArrayToBase64(userDetails.profilePic);
     return userDetails;
   }
 
@@ -28,11 +28,14 @@ export class UserService {
     if (userByToken.email !== body.email) {
       throw new BadRequestException(userMessages.errors.emailCannotBeUpdated);
     }
+    // const bufferImage = base64ToByteArray(body.profilePic);
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email: req.user.email },
       { ...body },
       { returnOriginal: false },
     );
+    if (!updatedUser)
+      throw new BadRequestException(userMessages.errors.errorWhileSavingUser);
     return {
       message: userMessages.messages.userUpdated,
     };

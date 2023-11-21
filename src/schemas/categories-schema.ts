@@ -16,10 +16,10 @@ import { Document } from 'mongoose';
 })
 export class Specialization {
   @Prop({ required: true })
-  specialization: String;
+  specialization: string;
 
   @Prop({ default: true })
-  isActive: Boolean;
+  isActive: boolean;
 }
 
 export type SpecializationDocument = Specialization & Document;

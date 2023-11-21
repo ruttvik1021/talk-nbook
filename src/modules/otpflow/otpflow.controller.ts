@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SendOtpDTO, ValidateOtpDTO } from 'src/dtos/otpDto';
-import { otpFlowUrls } from 'src/urls';
+import { otpFlowUrls } from 'src/utils/urls';
 import { OtpflowService } from './otpflow.service';
 
 @Controller(otpFlowUrls.baseUrl)

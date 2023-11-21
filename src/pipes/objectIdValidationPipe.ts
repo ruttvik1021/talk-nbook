@@ -5,7 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { commonMessages } from 'src/constants';
+import { commonMessages } from 'src/utils/constants';
 
 @Injectable()
 export class ObjectIdValidationPipe implements PipeTransform<string> {

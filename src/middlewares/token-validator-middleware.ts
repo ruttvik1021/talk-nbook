@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { ConfigService } from '@nestjs/config'; // Import ConfigService
-import { authenticationConstants } from 'src/constants';
+import { authenticationConstants } from 'src/utils/constants';
 
 @Injectable()
 export class TokenValidator implements NestMiddleware {
