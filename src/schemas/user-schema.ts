@@ -75,6 +75,9 @@ export class Users {
   @Prop({ default: false })
   onSiteService: boolean;
 
+  @Prop({ required: false, type: [String] })
+  locations: string[];
+
   @Prop({ type: [Specialization] }) // Specify the array type
   @Prop({ required: false }) // If specializations can be empty
   specializations: Specialization[];

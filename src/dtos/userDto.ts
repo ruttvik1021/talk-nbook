@@ -91,6 +91,12 @@ export class UpdateUserDTO {
   @IsBoolean()
   onSiteService: boolean;
 
+  @ValidateIf((o) => o.onSiteService === true)
+  @IsArray()
+  @ArrayMinSize(1, { message: userMessages.errors.locationMustBeAtleastOne })
+  @MaxLength(50, { each: true, message: userMessages.errors.locationLength })
+  locations: string[];
+
   @IsArray()
   @ValidateIf((o) => o.isServiceProvider === true)
   @ArrayMinSize(1, {
