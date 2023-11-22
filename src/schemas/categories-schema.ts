@@ -20,6 +20,9 @@ export class Specialization {
 
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop({ default: false })
+  preffered: boolean;
 }
 
 export type SpecializationDocument = Specialization & Document;

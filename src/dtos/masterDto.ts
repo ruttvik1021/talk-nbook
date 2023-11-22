@@ -16,6 +16,10 @@ export class AddLanguageDTO {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  preffered: boolean;
 }
 
 export class AddSpecializationDTO {
@@ -27,4 +31,8 @@ export class AddSpecializationDTO {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  preffered: boolean;
 }

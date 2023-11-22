@@ -20,6 +20,9 @@ export class Language {
 
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop({ default: false })
+  preffered: boolean;
 }
 
 export type LanguageDocument = Language & Document;

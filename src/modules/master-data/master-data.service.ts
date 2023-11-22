@@ -25,11 +25,25 @@ export class MasterDataService {
   ) {}
 
   async getAllLanguages(req: decodedRequest) {
+    console.log(req.user);
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
+    const userLanguagePreferences = await this.userModel.findOne(
+      {
+        email: req.user.email,
+      },
+      { languages: 1 },
+    );
     const query = isSuperAdmin ? {} : { isActive: true };
     const languages = await this.languageModel
       .find(query)
       .sort({ language: 1 });
+
+    if (!isSuperAdmin && userLanguagePreferences.languages.length) {
+      languages.forEach((item: any) => {
+        item.preffered = userLanguagePreferences.languages.includes(item.id);
+      });
+    }
+
     return languages;
   }
 
@@ -44,6 +58,7 @@ export class MasterDataService {
     const newLanguage = await this.languageModel.create({
       language: body.language,
       isActive: true,
+      preffered: false,
     });
     if (!newLanguage) {
       throw new BadRequestException(
@@ -115,10 +130,27 @@ export class MasterDataService {
 
   async getAllSpecializations(req: decodedRequest) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
+    const userSpecializationPreferences = await this.userModel.findOne(
+      {
+        email: req.user.email,
+      },
+      { prefferedSpecializations: 1 },
+    );
     const query = isSuperAdmin ? {} : { isActive: true };
-    const specializations = this.specializationModel
+    const specializations = await this.specializationModel
       .find(query)
       .sort({ specialization: 1 });
+    if (
+      !isSuperAdmin &&
+      userSpecializationPreferences.prefferedSpecializations.length
+    ) {
+      specializations.forEach((item) => {
+        item.preffered =
+          userSpecializationPreferences.prefferedSpecializations.includes(
+            item.id,
+          );
+      });
+    }
     return specializations;
   }
 
@@ -134,6 +166,7 @@ export class MasterDataService {
     const newSpecialization = await this.specializationModel.create({
       specialization: body.specialization,
       isActive: true,
+      preffered: false,
     });
     if (!newSpecialization) {
       throw new BadRequestException(

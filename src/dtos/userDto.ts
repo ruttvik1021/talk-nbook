@@ -82,7 +82,7 @@ export class UpdateUserDTO {
   @ArrayElementIsObjectId({
     message: userMessages.errors.invalidIdInPreferences,
   })
-  preferences: string[];
+  prefferedSpecializations: string[];
 
   @IsBoolean()
   isServiceProvider: boolean;

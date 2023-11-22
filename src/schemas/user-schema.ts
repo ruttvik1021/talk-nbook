@@ -67,7 +67,7 @@ export class Users {
   profilePic: string;
 
   @Prop({ type: [String] }) // Specify the array type
-  preferences: string[];
+  prefferedSpecializations: string[];
 
   @Prop({ default: false })
   isServiceProvider: boolean;
