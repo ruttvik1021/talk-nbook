@@ -8,6 +8,7 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
 import { TokenValidator } from './middlewares/token-validator-middleware';
 import { OtpflowModule } from './modules/otpflow/otpflow.module';
 import { UserModule } from './modules/user/user.module';
+import { SlotsModule } from './modules/slots/slots.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { UserModule } from './modules/user/user.module';
     }),
     UserModule,
     MasterDataModule,
+    SlotsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

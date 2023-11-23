@@ -42,16 +42,6 @@ export class MasterDataService {
       languages.forEach((item: any) => {
         item.preffered = userLanguagePreferences.languages.includes(item.id);
       });
-
-      languages.sort((a, b) => {
-        if (a.preffered && !b.preffered) {
-          return -1; // a comes before b
-        } else if (!a.preffered && b.preffered) {
-          return 1; // b comes before a
-        } else {
-          return 0; // order unchanged
-        }
-      });
     }
 
     return languages;

@@ -24,3 +24,8 @@ export const masterDataUrls = {
   updateLanguage: '/language/:id',
   roles: '/roles',
 };
+
+export const slotsUrl = {
+  getSlots: '/getSlots',
+  slotId: '/slot/:id',
+};
