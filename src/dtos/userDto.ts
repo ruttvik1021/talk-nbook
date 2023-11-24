@@ -44,7 +44,7 @@ class Specialization {
   @ValidateNested({ each: true })
   @Type(() => Certifications)
   @ArrayMinSize(1, {
-    message: userMessages.errors.categoryMustBeAtleastOne,
+    message: userMessages.errors.certificateMustBeAtleastOne,
   })
   certificates: Certifications[];
 }

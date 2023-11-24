@@ -10,6 +10,7 @@ import { OtpflowModule } from './modules/otpflow/otpflow.module';
 import { UserModule } from './modules/user/user.module';
 import { SlotsModule } from './modules/slots/slots.module';
 import { MailerService } from './mail/mail.service';
+import { BookslotsModule } from './modules/bookslots/bookslots.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { MailerService } from './mail/mail.service';
     UserModule,
     MasterDataModule,
     SlotsModule,
+    BookslotsModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailerService],

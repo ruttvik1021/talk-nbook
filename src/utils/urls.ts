@@ -9,7 +9,9 @@ export const authorizedUrls = '/api';
 export const userUrls = {
   getProfile: '/getprofile',
   getUsersList: `/allUsers`,
+  getServiceProvidersList: `/allServiceProviders`,
   getUserById: `/user/:id`,
+  getUsersBySpecialization: '/user/specialization/:id',
   userRoles: `/user/roles`,
   getAllLanguages: `/getAllLanguages`,
   getAllSpecilization: `/getAllSpecializations`,
@@ -26,6 +28,6 @@ export const masterDataUrls = {
 };
 
 export const slotsUrl = {
-  getSlots: '/getSlots',
-  slotId: '/slot/:id',
+  slotUrl: '/api/slots',
+  bookSlot: '/api/book/slot',
 };
