@@ -48,7 +48,7 @@ export class Users {
   @Prop({ default: true })
   isActive: boolean;
 
-  @Prop({ default: '' })
+  @Prop({ default: 'USER' })
   role: string;
 
   @Prop({ default: '' })
@@ -60,13 +60,13 @@ export class Users {
   @Prop({ enum: GENDER })
   gender: GENDER;
 
-  @Prop()
+  @Prop({ required: false })
   profilePicType: string;
 
-  @Prop()
+  @Prop({ required: false })
   profilePic: string;
 
-  @Prop({ type: [String] }) // Specify the array type
+  @Prop({ type: [String] })
   prefferedSpecializations: string[];
 
   @Prop({ default: false })
@@ -78,11 +78,11 @@ export class Users {
   @Prop({ required: false, type: [String] })
   locations: string[];
 
-  @Prop({ type: [Specialization] }) // Specify the array type
-  @Prop({ required: false }) // If specializations can be empty
+  @Prop({ type: [Specialization] })
+  @Prop({ required: false })
   specializations: Specialization[];
 
-  @Prop({ type: [String] }) // Specify the array type
+  @Prop({ type: [String] })
   languages: string[];
 
   @Prop({ required: true, default: false })

@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -5,11 +6,13 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
   MinLength,
   ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import { userMessages } from 'src/utils/constants';
 import { ArrayElementIsObjectId } from 'src/utils/validators/array-element-is-objectId-validator';
@@ -22,21 +25,27 @@ export enum GENDER {
 }
 
 class Certifications {
-  @IsString()
+  @IsNotEmpty()
   name: string;
 
-  @IsString()
+  @IsNotEmpty()
   photoType: string;
 
-  @IsString()
+  @IsNotEmpty()
   photo: string;
 }
 
 class Specialization {
-  @IsString()
+  @IsNotEmpty({ message: userMessages.errors.specializationIdRequired })
   specializationId: string;
 
+  @ValidateIf((o) => (o.specializationId ? true : false))
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Certifications)
+  @ArrayMinSize(1, {
+    message: userMessages.errors.categoryMustBeAtleastOne,
+  })
   certificates: Certifications[];
 }
 
@@ -72,9 +81,11 @@ export class UpdateUserDTO {
   @IsEnum(GENDER)
   gender: GENDER;
 
+  @IsOptional()
   @IsString()
   profilePicType: string;
 
+  @IsOptional()
   @IsString()
   profilePic: string;
 
@@ -97,8 +108,10 @@ export class UpdateUserDTO {
   @MaxLength(50, { each: true, message: userMessages.errors.locationLength })
   locations: string[];
 
-  @IsArray()
   @ValidateIf((o) => o.isServiceProvider === true)
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Specialization)
   @ArrayMinSize(1, {
     message: userMessages.errors.specializationMustBeAtleastOne,
   })

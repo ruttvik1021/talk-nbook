@@ -59,6 +59,7 @@ export const userMessages = {
   errors: {
     emailMustBeValid: 'Email must be valid',
     specializationMustBeAtleastOne: 'Specialization must be atleast one',
+    categoryMustBeAtleastOne: 'Category must be atleast one',
     locationMustBeAtleastOne: 'Location must be atleast one',
     languagesMustBeAtleastOne: 'Languages must be atleast one',
     mobileNumberRequired: 'Mobile number is required',
@@ -73,6 +74,7 @@ export const userMessages = {
     dateFormatIncorrect: 'Date format must be DD/MM/YYYY ',
     maxLengthForAbout: 'Maximum characters exceeds',
     locationLength: 'Each location must be at most 50 characters',
+    specializationIdRequired: 'Specialization is required',
   },
   messages: {
     userUpdated: 'User Updated',
