@@ -36,7 +36,7 @@ export class OtpflowService {
         validTill: validTill,
         otp: generatedOtp,
       });
-      const otpSentToEmail = await this.mailerService.sendMail({
+      await this.mailerService.sendMail({
         to: userEmail,
         subject: 'Otp for Login',
         otp: `${generatedOtp}`,
@@ -64,7 +64,7 @@ export class OtpflowService {
         validTill: validTill,
       },
     );
-    const otpSentToEmail = await this.mailerService.sendMail({
+    await this.mailerService.sendMail({
       to: userEmail,
       subject: 'Otp for Login',
       otp: `${generatedOtp}`,

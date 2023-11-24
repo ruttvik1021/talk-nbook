@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 
 interface ISendMail {
@@ -12,13 +13,17 @@ interface ISendMail {
 @Injectable()
 export class MailerService {
   private readonly transporter;
+  private readonly configService: ConfigService;
 
-  constructor() {
+  constructor(configService: ConfigService) {
+    this.configService = configService;
+    const userNameForEmail = this.configService.get('NODEMAILER_USER');
+    const passwordForEmail = this.configService.get('NODEMAILER_PASS');
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'rktesting2022@gmail.com',
-        pass: 'ekai eyao wszq xtqf',
+        user: userNameForEmail,
+        pass: passwordForEmail,
       },
     });
   }
@@ -50,6 +55,7 @@ export class MailerService {
         <title>Welcome Back</title>
       </head>
       <body>
+        <h1>Welcome back user</h1>
         <p>Here is your OTP for login: <strong>${otp}</strong></p>
         <p>Valid for: <strong>${validfor} seconds</strong></p>
       </body>
