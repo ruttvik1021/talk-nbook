@@ -7,6 +7,7 @@ import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { otpMessages } from '../../utils/constants';
 import { RoleEnums } from 'src/utils/enums';
+import { MailerService } from 'src/mail/mail.service';
 
 @Injectable()
 export class OtpflowService {
@@ -20,6 +21,8 @@ export class OtpflowService {
     private readonly configService: ConfigService,
 
     private readonly jwtService: JwtService,
+
+    private readonly mailerService: MailerService,
   ) {}
 
   async sendOtpToUser(userEmail: string) {
@@ -33,8 +36,16 @@ export class OtpflowService {
         validTill: validTill,
         otp: generatedOtp,
       });
+      const otpSentToEmail = await this.mailerService.sendMail({
+        to: userEmail,
+        subject: 'Otp for Login',
+        otp: `${generatedOtp}`,
+        type: 'Signup',
+        validfor: validSeconds,
+      });
       if (!otpSent)
         throw new BadRequestException(otpMessages.errors.somethingWentWrong);
+
       return {
         message: otpMessages.messages.otpSent,
         validfor: validSeconds,
@@ -53,6 +64,13 @@ export class OtpflowService {
         validTill: validTill,
       },
     );
+    const otpSentToEmail = await this.mailerService.sendMail({
+      to: userEmail,
+      subject: 'Otp for Login',
+      otp: `${generatedOtp}`,
+      type: 'Login',
+      validfor: validSeconds,
+    });
     if (!updatedOtp)
       throw new BadRequestException(otpMessages.errors.somethingWentWrong);
     return {

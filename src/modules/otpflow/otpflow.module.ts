@@ -6,6 +6,7 @@ import { SEND_OTP_MODEL, SendOtpSchema } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserSchema } from 'src/schemas/user-schema';
 import { OtpflowController } from './otpflow.controller';
 import { OtpflowService } from './otpflow.service';
+import { MailerService } from '../../mail/mail.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { OtpflowService } from './otpflow.service';
     ]),
     ConfigModule.forRoot(),
   ],
-  providers: [OtpflowService],
+  providers: [OtpflowService, MailerService],
   controllers: [OtpflowController],
 })
 export class OtpflowModule {}

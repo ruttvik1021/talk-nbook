@@ -9,6 +9,7 @@ import { TokenValidator } from './middlewares/token-validator-middleware';
 import { OtpflowModule } from './modules/otpflow/otpflow.module';
 import { UserModule } from './modules/user/user.module';
 import { SlotsModule } from './modules/slots/slots.module';
+import { MailerService } from './mail/mail.service';
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { SlotsModule } from './modules/slots/slots.module';
     SlotsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailerService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
