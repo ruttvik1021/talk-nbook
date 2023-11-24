@@ -59,7 +59,7 @@ export const userMessages = {
   errors: {
     emailMustBeValid: 'Email must be valid',
     specializationMustBeAtleastOne: 'Specialization must be atleast one',
-    categoryMustBeAtleastOne: 'Category must be atleast one',
+    certificateMustBeAtleastOne: 'Certificate must be atleast one',
     locationMustBeAtleastOne: 'Location must be atleast one',
     languagesMustBeAtleastOne: 'Languages must be atleast one',
     mobileNumberRequired: 'Mobile number is required',
@@ -78,6 +78,26 @@ export const userMessages = {
   },
   messages: {
     userUpdated: 'User Updated',
+  },
+};
+
+export const slotMessages = {
+  errors: {
+    slotTimeInvalid: 'Slot time invalid',
+    slotAlreadyCreated: 'Slot already created',
+    errorWhileUpdatingSlot: 'Error while updating slot',
+    idCannotBeChanged: 'Id cannot be changed',
+    noSlotFound: 'No slot found',
+    atleastOneSlotRequired: 'Atleast one slot required',
+
+    errorWhileBookingSlot: 'Error while booking slot',
+  },
+  messages: {
+    slotCreated: 'Slot created successfully',
+    slotDeleted: 'Slot deleted successfully',
+    slotUpdated: 'Slot updated successfully',
+
+    slotBooked: 'Slot booked successfully',
   },
 };
 

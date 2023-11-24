@@ -75,8 +75,6 @@ export class OtpflowService {
       throw new BadRequestException(otpMessages.errors.somethingWentWrong);
     return {
       message: otpMessages.messages.otpSent,
-      validfor: validSeconds,
-      otp: generatedOtp,
     };
   }
 

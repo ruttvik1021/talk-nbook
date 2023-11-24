@@ -31,7 +31,7 @@ export class UserService {
     // const bufferImage = base64ToByteArray(body.profilePic);
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email: req.user.email },
-      { ...body },
+      { ...body, isProfileComplete: true },
       { returnOriginal: false },
     );
     if (!updatedUser)
@@ -39,5 +39,14 @@ export class UserService {
     return {
       message: userMessages.messages.userUpdated,
     };
+  }
+
+  async getAllServiceProviders() {
+    const users = await this.userModel.find({ isServiceProvider: true });
+    return users;
+  }
+  async getAllUsersList() {
+    const users = await this.userModel.find();
+    return users;
   }
 }

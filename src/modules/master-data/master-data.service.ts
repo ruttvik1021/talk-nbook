@@ -25,7 +25,6 @@ export class MasterDataService {
   ) {}
 
   async getAllLanguages(req: decodedRequest) {
-    console.log(req.user);
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
     const userLanguagePreferences = await this.userModel.findOne(
       {

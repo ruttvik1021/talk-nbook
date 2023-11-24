@@ -27,6 +27,7 @@ class Specialization {
   toJSON: {
     transform: function (doc, ret) {
       // Exclude fields when converting the document to JSON
+      ret.id = ret._id;
       delete ret.createdAt;
       delete ret.updatedAt;
       delete ret.__v;
