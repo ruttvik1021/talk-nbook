@@ -4,12 +4,10 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
-  IsOptional,
   IsString,
   Matches,
   ValidateIf,
   ValidateNested,
-  arrayMinSize,
 } from 'class-validator';
 import { slotMessages } from 'src/utils/constants';
 

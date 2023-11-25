@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -35,4 +36,14 @@ export class AddSpecializationDTO {
   @IsOptional()
   @IsBoolean()
   preffered: boolean;
+}
+
+export class PaginationDTO {
+  @IsOptional()
+  @IsNumber()
+  limit: number;
+
+  @IsOptional()
+  @IsNumber()
+  offset: number;
 }

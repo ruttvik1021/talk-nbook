@@ -20,40 +20,73 @@ export class SlotsService {
     return user;
   }
 
+  private isOverlap(interval1: any, interval2: any): boolean {
+    const from1 = new Date(`2000-01-01T${interval1.from}`);
+    const to1 = new Date(`2000-01-01T${interval1.to}`);
+
+    const from2 = new Date(`2000-01-01T${interval2.from}`);
+    const to2 = new Date(`2000-01-01T${interval2.to}`);
+
+    return from1 < to2 && to1 > from2;
+  }
+
+  private overlapCheck(value: any) {
+    for (let i = 0; i < value.length - 1; i++) {
+      const currentInterval = value[i];
+      const nextIntervals = value.slice(i + 1);
+
+      for (const nextInterval of nextIntervals) {
+        if (this.isOverlap(currentInterval, nextInterval)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   async createSlot(req: decodedRequest, body: SlotDTO) {
     const user = await this.findUserByEmail(req.user.email);
 
-    const isSlotCreated = await this.slotModel.findOne({
-      ...body,
+    const isSlotCreatedForTheDate = await this.slotModel.findOne({
+      date: body.date,
       userId: user.id,
     });
 
-    if (isSlotCreated)
-      throw new BadRequestException(slotMessages.errors.slotAlreadyCreated);
+    if (isSlotCreatedForTheDate)
+      throw new BadRequestException(
+        slotMessages.errors.slotsAlreadyCreatedForThisDateUpdateThisDate,
+      );
 
-    const slot = await this.slotModel.create({
-      ...body,
-      userId: user.id,
-    });
-
-    return slot;
+    if (this.overlapCheck(body.slots)) {
+      const slot = await this.slotModel.create({
+        ...body,
+        userId: user.id,
+      });
+      return slot;
+    }
+    return { message: slotMessages.errors.datesOverLap };
   }
+
   async updateSlot(req: decodedRequest, body: SlotDTO, id: string) {
     const user = await this.findUserByEmail(req.user.email);
 
-    const slot = await this.slotModel.findOneAndUpdate(
-      { _id: id, userId: user.id },
-      { ...body },
-      { returnOriginal: false },
-    );
+    if (this.overlapCheck(body.slots)) {
+      const slot = await this.slotModel.findOneAndUpdate(
+        { _id: id, userId: user.id },
+        { ...body },
+        { returnOriginal: false },
+      );
 
-    if (!slot)
-      throw new BadRequestException(slotMessages.errors.errorWhileUpdatingSlot);
-
-    return {
-      message: slotMessages.messages.slotUpdated,
-      data: body,
-    };
+      if (!slot)
+        throw new BadRequestException(
+          slotMessages.errors.errorWhileUpdatingSlot,
+        );
+      return {
+        message: slotMessages.messages.slotUpdated,
+        data: body,
+      };
+    }
+    return { message: slotMessages.errors.datesOverLap };
   }
 
   async getSlots(req: decodedRequest) {

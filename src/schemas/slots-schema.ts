@@ -1,12 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+type BookingStatus = 'Vacant' | 'Booked' | 'Lapsed';
+
 class TimeSlots {
   @Prop()
   from: string;
 
   @Prop()
   to: string;
+
+  @Prop({ default: 'Vacant' })
+  status: BookingStatus;
+
+  @Prop()
+  customerId: string;
 }
 
 @Schema({

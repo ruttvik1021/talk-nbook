@@ -6,6 +6,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -123,4 +124,20 @@ export class UpdateUserDTO {
   })
   @ArrayElementIsObjectId({ message: userMessages.errors.invalidIdInLanguages })
   languages: string[];
+}
+
+export class GetUserBySpecilizationDTO {
+  @IsArray()
+  @ArrayElementIsObjectId({
+    message: userMessages.errors.invalidIdInPreferences,
+  })
+  specializations: string[];
+
+  @IsOptional()
+  @IsNumber()
+  limit: number;
+
+  @IsOptional()
+  @IsNumber()
+  offset: number;
 }

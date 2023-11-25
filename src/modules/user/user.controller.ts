@@ -1,11 +1,22 @@
-import { Body, Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { authorizedUrls, userUrls } from 'src/utils/urls';
 import { UserService } from './user.service';
 import { Request } from 'express';
-import { UpdateUserDTO } from 'src/dtos/userDto';
+import { GetUserBySpecilizationDTO, UpdateUserDTO } from 'src/dtos/userDto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RoleEnums } from 'src/utils/enums';
 import { RolesGuard } from 'src/guards/role.guard';
+import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
+import { PaginationDTO } from 'src/dtos/masterDto';
 
 @Controller(authorizedUrls)
 export class UserController {
@@ -21,15 +32,20 @@ export class UserController {
     return this.userService.updateProfile(req, body);
   }
 
-  @Get(userUrls.getServiceProvidersList)
-  async getAllServiceProviders() {
-    return this.userService.getAllServiceProviders();
+  @Post(userUrls.getServiceProvidersList)
+  async getAllServiceProviders(@Body() body: GetUserBySpecilizationDTO) {
+    return this.userService.getAllServiceProviders(body);
   }
 
-  @Get(userUrls.getUsersList)
+  @Post(userUrls.getUsersList)
   @Roles([RoleEnums.SUPERADMIN])
   @UseGuards(RolesGuard)
-  async getUsersList() {
-    return this.userService.getAllUsersList();
+  async getUsersList(@Body() body: PaginationDTO) {
+    return this.userService.getAllUsersList(body);
+  }
+
+  @Get(userUrls.getUserById)
+  async getUserById(@Param('id', ObjectIdValidationPipe) id: string) {
+    return this.userService.getUserById(id);
   }
 }

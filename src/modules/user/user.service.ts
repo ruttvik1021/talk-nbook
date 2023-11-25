@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdateUserDTO } from 'src/dtos/userDto';
+import { PaginationDTO } from 'src/dtos/masterDto';
+import { GetUserBySpecilizationDTO, UpdateUserDTO } from 'src/dtos/userDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { userMessages } from 'src/utils/constants';
@@ -41,12 +42,35 @@ export class UserService {
     };
   }
 
-  async getAllServiceProviders() {
-    const users = await this.userModel.find({ isServiceProvider: true });
+  async getAllServiceProviders(body: GetUserBySpecilizationDTO) {
+    const { specializations, limit, offset } = body;
+    if (specializations.length) {
+      const users = await this.userModel
+        .find({
+          isServiceProvider: true,
+          'specializations.specializationId': { $in: specializations },
+        })
+        .skip(offset)
+        .limit(limit)
+        .exec();
+      return users;
+    } else {
+      const users = await this.userModel
+        .find({ isServiceProvider: true })
+        .skip(offset)
+        .limit(limit);
+      return users;
+    }
+  }
+  async getAllUsersList(body: PaginationDTO) {
+    const { limit, offset } = body;
+    const users = await this.userModel.find().skip(offset).limit(limit);
     return users;
   }
-  async getAllUsersList() {
-    const users = await this.userModel.find();
-    return users;
+
+  async getUserById(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) throw new BadRequestException(userMessages.errors.noUserFound);
+    return user;
   }
 }

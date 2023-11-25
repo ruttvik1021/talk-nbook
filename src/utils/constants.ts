@@ -85,12 +85,15 @@ export const slotMessages = {
   errors: {
     slotTimeInvalid: 'Slot time invalid',
     slotAlreadyCreated: 'Slot already created',
+    slotsAlreadyCreatedForThisDateUpdateThisDate:
+      'Slots already created for this date, update the date to add/remove slots',
     errorWhileUpdatingSlot: 'Error while updating slot',
     idCannotBeChanged: 'Id cannot be changed',
     noSlotFound: 'No slot found',
     atleastOneSlotRequired: 'Atleast one slot required',
 
     errorWhileBookingSlot: 'Error while booking slot',
+    datesOverLap: 'Dates overlap',
   },
   messages: {
     slotCreated: 'Slot created successfully',
