@@ -21,6 +21,11 @@ import { SlotsService } from './slots.service';
 export class SlotsController {
   constructor(private readonly slotService: SlotsService) {}
 
+  @Get(slotsUrl.bookSlotOfServiceProvider)
+  async getSlotsByUser(@Param('id', ObjectIdValidationPipe) userId: string) {
+    return this.slotService.getSlotsByUserId(userId);
+  }
+
   @Put(slotsUrl.slotUrlId)
   async updateSlot(
     @Req() req: Request,
@@ -43,12 +48,5 @@ export class SlotsController {
   @Get(slotsUrl.slotUrl)
   async getSlots(@Req() req: Request) {
     return this.slotService.getSlots(req);
-  }
-
-  @Get(slotsUrl.bookSlotOfUser)
-  async getSlotsByUser(
-    @Param('userId', ObjectIdValidationPipe) userId: string,
-  ) {
-    return this.slotService.getSlotsByUserId(userId);
   }
 }

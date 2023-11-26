@@ -4,8 +4,6 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
-  IsOptional,
-  IsString,
   Matches,
   ValidateIf,
   ValidateNested,
@@ -22,10 +20,6 @@ class TimeSlotDto {
     message: slotMessages.errors.slotTimeInvalid,
   })
   to: Date;
-
-  @IsOptional()
-  @IsString()
-  id: string;
 }
 
 export class SlotDTO {

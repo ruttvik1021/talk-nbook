@@ -1,15 +1,15 @@
 import { Body, Controller, Param, Post, Req } from '@nestjs/common';
-import { SlotBookingsDTO } from 'src/dtos/slotDto';
-import { slotsUrl } from 'src/utils/urls';
-import { BookslotsService } from './bookslots.service';
 import { Request } from 'express';
+import { SlotBookingsDTO } from 'src/dtos/slotDto';
 import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
+import { authorizedUrls, slotBookingUrls } from 'src/utils/urls';
+import { BookslotsService } from './bookslots.service';
 
-@Controller(slotsUrl.bookSlot)
+@Controller(authorizedUrls)
 export class BookslotsController {
   constructor(private readonly bookSlotsService: BookslotsService) {}
 
-  @Post(slotsUrl.bookSlotOfUser)
+  @Post(slotBookingUrls.bookSlotOfServiceProvider)
   async bookSlot(
     @Req() req: Request,
     @Body() body: SlotBookingsDTO,

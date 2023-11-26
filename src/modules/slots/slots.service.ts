@@ -1,10 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { SlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
-import { SLOTS_MODEL, SlotsDocument } from 'src/schemas/slots-schema';
+import {
+  BookingStatus,
+  SLOTS_MODEL,
+  SlotsDocument,
+} from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
 
@@ -31,8 +34,23 @@ export class SlotsService {
     return from1 < to2 && to1 > from2;
   }
 
-  private overlapCheck(value: any) {
-    for (let i = 0; i < value.length - 1; i++) {
+  private isValidTimeRange(from: string, to: string): boolean {
+    const fromTime = new Date(`1970-01-01T${from}`);
+    const toTime = new Date(`1970-01-01T${to}`);
+    return fromTime < toTime;
+  }
+
+  private overlapCheck(value: any): boolean {
+    for (let i = 0; i < value.length; i++) {
+      const fromValue = value[i].from;
+      const toValue = value[i].to;
+
+      if (!this.isValidTimeRange(fromValue, toValue)) {
+        throw new BadRequestException(
+          slotMessages.errors.toTimeMustBeGreaterThanFromTime,
+        );
+      }
+
       const currentInterval = value[i];
       const nextIntervals = value.slice(i + 1);
 
@@ -59,13 +77,21 @@ export class SlotsService {
       );
 
     if (this.overlapCheck(body.slots)) {
+      const defaultStatus: BookingStatus = 'Vacant';
+      const defaultSlots = body.slots.map((slot) => ({
+        ...slot,
+        status: defaultStatus,
+      }));
+
       const slot = await this.slotModel.create({
         ...body,
+        slots: defaultSlots,
         userId: user.id,
       });
       return slot;
     }
-    return { message: slotMessages.errors.datesOverLap };
+
+    throw new BadRequestException(slotMessages.errors.datesOverLap);
   }
 
   async updateSlot(req: decodedRequest, body: SlotDTO, id: string) {
@@ -97,7 +123,7 @@ export class SlotsService {
   }
 
   async getSlotsByUserId(userId: string) {
-    const slotsList = await this.slotModel.find({ userId });
+    const slotsList = await this.slotModel.find({ userId: userId });
     return slotsList;
   }
 

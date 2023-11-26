@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-type BookingStatus = 'Vacant' | 'Booked' | 'Lapsed';
+export type BookingStatus = 'Vacant' | 'Booked' | 'Lapsed';
 
 class TimeSlots {
-  @Prop()
+  @Prop({ required: true })
   from: string;
 
-  @Prop()
+  @Prop({ required: true })
   to: string;
 
-  @Prop({ default: 'Vacant' })
+  @Prop({ required: true })
   status: BookingStatus;
 
   @Prop()
@@ -37,7 +37,7 @@ export class Slots {
   @Prop({ required: true })
   date: string;
 
-  @Prop({ required: true })
+  @Prop({ type: [TimeSlots], default: [], required: true })
   slots: TimeSlots[];
 }
 

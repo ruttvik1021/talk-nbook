@@ -94,6 +94,7 @@ export const slotMessages = {
 
     errorWhileBookingSlot: 'Error while booking slot',
     datesOverLap: 'Dates overlap',
+    toTimeMustBeGreaterThanFromTime: 'To time must be greater than from time',
   },
   messages: {
     slotCreated: 'Slot created successfully',

@@ -3,11 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { MailerService } from 'src/mail/mail.service';
 import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { otpMessages } from '../../utils/constants';
-import { RoleEnums } from 'src/utils/enums';
-import { MailerService } from 'src/mail/mail.service';
 
 @Injectable()
 export class OtpflowService {
@@ -49,7 +48,6 @@ export class OtpflowService {
       return {
         message: otpMessages.messages.otpSent,
         validfor: validSeconds,
-        otp: generatedOtp,
       };
     }
     if (new Date(getEmailLog.validTill) > new Date()) {
@@ -75,6 +73,7 @@ export class OtpflowService {
       throw new BadRequestException(otpMessages.errors.somethingWentWrong);
     return {
       message: otpMessages.messages.otpSent,
+      validfor: validSeconds,
     };
   }
 
@@ -99,7 +98,7 @@ export class OtpflowService {
 
       const accessToken = await this.jwtService.signAsync({
         email: createdUser.email,
-        role: RoleEnums.USER,
+        role: createdUser.role,
       });
 
       if (createdUser) {

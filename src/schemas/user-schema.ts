@@ -49,7 +49,7 @@ export class Users {
   @Prop({ default: true })
   isActive: boolean;
 
-  @Prop({ default: 'USER' })
+  @Prop({ required: true, default: 'USER' })
   role: string;
 
   @Prop({ default: '' })

@@ -30,6 +30,9 @@ export const masterDataUrls = {
 export const slotsUrl = {
   slotUrl: '/slots',
   slotUrlId: '/slots/:id',
-  bookSlot: '/book/slot',
-  bookSlotOfUser: '/user/:userId',
+  bookSlotOfServiceProvider: '/slots/user/:id',
+};
+
+export const slotBookingUrls = {
+  bookSlotOfServiceProvider: '/book/slot/:userId',
 };
