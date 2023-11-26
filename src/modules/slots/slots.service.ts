@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { SlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
@@ -92,6 +93,11 @@ export class SlotsService {
   async getSlots(req: decodedRequest) {
     const user = await this.findUserByEmail(req.user.email);
     const slotsList = await this.slotModel.find({ userId: user.id });
+    return slotsList;
+  }
+
+  async getSlotsByUserId(userId: string) {
+    const slotsList = await this.slotModel.find({ userId });
     return slotsList;
   }
 

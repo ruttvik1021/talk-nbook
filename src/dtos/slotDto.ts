@@ -4,6 +4,7 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsDateString,
+  IsOptional,
   IsString,
   Matches,
   ValidateIf,
@@ -21,6 +22,10 @@ class TimeSlotDto {
     message: slotMessages.errors.slotTimeInvalid,
   })
   to: Date;
+
+  @IsOptional()
+  @IsString()
+  id: string;
 }
 
 export class SlotDTO {
@@ -40,8 +45,5 @@ export class SlotBookingsDTO {
   @ArrayMinSize(1, {
     message: slotMessages.errors.atleastOneSlotRequired,
   })
-  slots: string[];
-
-  @IsString()
-  userId: string;
+  bookSlots: SlotDTO[];
 }

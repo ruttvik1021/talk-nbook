@@ -28,6 +28,8 @@ export const masterDataUrls = {
 };
 
 export const slotsUrl = {
-  slotUrl: '/api/slots',
-  bookSlot: '/api/book/slot',
+  slotUrl: '/slots',
+  slotUrlId: '/slots/:id',
+  bookSlot: '/book/slot',
+  bookSlotOfUser: '/user/:userId',
 };

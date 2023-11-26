@@ -13,15 +13,15 @@ import { Request } from 'express';
 import { SlotDTO } from 'src/dtos/slotDto';
 import { ServiceProviderGuard } from 'src/guards/serviceprovider.guard';
 import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
-import { slotsUrl } from 'src/utils/urls';
+import { authorizedUrls, slotsUrl } from 'src/utils/urls';
 import { SlotsService } from './slots.service';
 
-@Controller(slotsUrl.slotUrl)
+@Controller(authorizedUrls)
 @UseGuards(ServiceProviderGuard)
 export class SlotsController {
   constructor(private readonly slotService: SlotsService) {}
 
-  @Put(':id')
+  @Put(slotsUrl.slotUrlId)
   async updateSlot(
     @Req() req: Request,
     @Body() body: SlotDTO,
@@ -30,18 +30,25 @@ export class SlotsController {
     return this.slotService.updateSlot(req, body, id);
   }
 
-  @Delete(':id')
+  @Delete(slotsUrl.slotUrlId)
   async deleteSlot(@Param('id', ObjectIdValidationPipe) id: string) {
     return this.slotService.deleteSlot(id);
   }
 
-  @Post()
+  @Post(slotsUrl.slotUrl)
   async createSlot(@Req() req: Request, @Body() body: SlotDTO) {
     return this.slotService.createSlot(req, body);
   }
 
-  @Get()
+  @Get(slotsUrl.slotUrl)
   async getSlots(@Req() req: Request) {
     return this.slotService.getSlots(req);
+  }
+
+  @Get(slotsUrl.bookSlotOfUser)
+  async getSlotsByUser(
+    @Param('userId', ObjectIdValidationPipe) userId: string,
+  ) {
+    return this.slotService.getSlotsByUserId(userId);
   }
 }

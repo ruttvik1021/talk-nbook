@@ -20,17 +20,19 @@ export class BookslotsService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async bookSlot(req: decodedRequest, body: SlotBookingsDTO) {
-    const user = await this.userModel.findOne({ email: req.user.email });
-    const slotBooking = await this.slotBookingModel.create({
-      ...body,
-      customerId: user.id,
-    });
-    if (!slotBooking)
-      throw new BadRequestException(slotMessages.errors.errorWhileBookingSlot);
-    return {
-      message: slotMessages.messages.slotBooked,
-      data: slotBooking,
-    };
+  async bookSlot(req: decodedRequest, body: SlotBookingsDTO, userId: string) {
+    console.log(body);
+    return { body, userId };
+    // const user = await this.userModel.findOne({ email: req.user.email });
+    // const slotBooking = await this.slotBookingModel.create({
+    //   ...body,
+    //   customerId: user.id,
+    // });
+    // if (!slotBooking)
+    //   throw new BadRequestException(slotMessages.errors.errorWhileBookingSlot);
+    // return {
+    //   message: slotMessages.messages.slotBooked,
+    //   data: slotBooking,
+    // };
   }
 }
