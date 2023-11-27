@@ -19,8 +19,8 @@ import { BookslotsModule } from './modules/bookslots/bookslots.module';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
+        secret: configService.get('JWT_SECRET')!,
+        signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN')! },
       }),
       inject: [ConfigService],
     }),

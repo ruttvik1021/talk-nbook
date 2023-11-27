@@ -34,5 +34,5 @@ export const slotsUrl = {
 };
 
 export const slotBookingUrls = {
-  bookSlotOfServiceProvider: '/book/slot',
+  bookSlotOfServiceProvider: '/book/slot/user',
 };

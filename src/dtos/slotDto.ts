@@ -4,10 +4,12 @@ import {
   IsArray,
   IsDateString,
   IsMongoId,
+  IsString,
   Matches,
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
+import { BookingStatus } from 'src/schemas/slots-schema';
 import { slotMessages } from 'src/utils/constants';
 
 class TimeSlotDto {
@@ -21,6 +23,20 @@ class TimeSlotDto {
   })
   to: Date;
 }
+class UpdateTimeSlotDto {
+  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+    message: slotMessages.errors.slotTimeInvalid,
+  })
+  from: Date;
+
+  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
+    message: slotMessages.errors.slotTimeInvalid,
+  })
+  to: Date;
+
+  @IsString()
+  status: BookingStatus;
+}
 
 export class SlotDTO {
   @IsDateString()
@@ -33,14 +49,28 @@ export class SlotDTO {
   @Type(() => TimeSlotDto)
   slots?: TimeSlotDto[];
 }
-
-export class BookSlotDTO {
-  @IsMongoId()
-  userId: string;
-
+export class UpdateSlotDTO {
   @IsDateString()
   date: Date;
 
   @ValidateIf((o) => (o.date ? true : false))
-  slot: TimeSlotDto;
+  @IsArray()
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateTimeSlotDto)
+  slots?: UpdateTimeSlotDto[];
+
+  @IsMongoId()
+  id: string;
+}
+
+export class BookSlotDTO {
+  @IsString()
+  slotDateId: string;
+
+  @IsString()
+  slotTimeId: string;
+
+  @IsMongoId()
+  userId: string;
 }

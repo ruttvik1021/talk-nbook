@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { SlotDTO } from 'src/dtos/slotDto';
+import { SlotDTO, UpdateSlotDTO } from 'src/dtos/slotDto';
 import { ServiceProviderGuard } from 'src/guards/serviceprovider.guard';
 import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
 import { authorizedUrls, slotsUrl } from 'src/utils/urls';
@@ -29,7 +29,7 @@ export class SlotsController {
   @Put(slotsUrl.slotUrlId)
   async updateSlot(
     @Req() req: Request,
-    @Body() body: SlotDTO,
+    @Body() body: UpdateSlotDTO,
     @Param('id', ObjectIdValidationPipe) id: string,
   ) {
     return this.slotService.updateSlot(req, body, id);

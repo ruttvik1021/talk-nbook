@@ -78,6 +78,8 @@ export class OtpflowService {
   }
 
   async validateOtp({ email, otp }: { email: string; otp: number }) {
+    const jwtSecret = this.configService.get('JWT_SECRET')!;
+    const jwtExpiresIn = this.configService.get('JWT_EXPIRES_IN')!;
     const getEmailLog = await this.sendOtpModel.findOne({ email: email });
 
     if (!getEmailLog) {
@@ -96,11 +98,14 @@ export class OtpflowService {
     if (!user) {
       const createdUser = await this.userModel.create({ email: email });
 
-      const accessToken = await this.jwtService.signAsync({
-        email: createdUser.email,
-        role: createdUser.role,
-        id: createdUser._id,
-      });
+      const accessToken = await this.jwtService.signAsync(
+        {
+          email: createdUser.email,
+          role: createdUser.role,
+          id: createdUser._id,
+        },
+        { secret: jwtSecret, expiresIn: jwtExpiresIn },
+      );
 
       if (createdUser) {
         return {
@@ -110,11 +115,14 @@ export class OtpflowService {
       }
     }
 
-    const accessToken = await this.jwtService.signAsync({
-      email: user.email,
-      role: user.role,
-      id: user._id,
-    });
+    const accessToken = await this.jwtService.signAsync(
+      {
+        email: user.email,
+        role: user.role,
+        id: user._id,
+      },
+      { secret: jwtSecret, expiresIn: jwtExpiresIn },
+    );
 
     return {
       accessToken: accessToken,

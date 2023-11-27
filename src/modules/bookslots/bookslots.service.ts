@@ -26,70 +26,78 @@ export class BookslotsService {
   ) {}
 
   async bookSlot(req: decodedRequest, body: BookSlotDTO) {
-    const { userId, date, slot } = body;
+    const { userId, slotTimeId, slotDateId } = body;
     const userDetails = await this.userModel.findById(userId);
     if (!userDetails)
       throw new BadRequestException(userMessages.errors.noUserFound);
 
-    const isSlotsAvailableOnThisDate = await this.slotModel.findOne({
-      userId: userId,
-      date: date,
+    const dateSlot = await this.slotModel.findById(slotDateId);
+    const timeSlotIndex = dateSlot?.slots?.findIndex(
+      (item: any) => item.id === slotTimeId,
+    );
+
+    console.log(dateSlot.slots[1]);
+
+    console.log({
+      isDateSlot: !dateSlot,
+      timeIndex: timeSlotIndex < 0,
     });
 
-    if (!isSlotsAvailableOnThisDate || !isSlotsAvailableOnThisDate.slots.length)
-      throw new BadRequestException(
-        slotMessages.errors.noSlotsOnTheSelectedDate,
-      );
+    if (!dateSlot || timeSlotIndex < 0)
+      throw new BadRequestException(slotMessages.errors.noSlotFound);
 
-    const arrayWithDateObjects = isSlotsAvailableOnThisDate.slots.map(
-      (item) => ({
-        ...item,
-        from: new Date(`2000-01-01T${item.from}`),
-        to: new Date(`2000-01-01T${item.to}`),
-      }),
-    );
+    const updatedSlots = dateSlot.slots.map((item, index) => {
+      if (index === timeSlotIndex) {
+        return {
+          ...item,
+          status: 'Lapsed',
+        };
+      }
+      return item;
+    });
 
-    const receivedObjectWithDate = {
-      ...slot,
-      from: new Date(`2000-01-01T${slot.from}`),
-      to: new Date(`2000-01-01T${slot.to}`),
+    const updatedDocument = {
+      ...dateSlot,
+      slots: updatedSlots,
     };
 
-    const isDateValid = arrayWithDateObjects.some(
-      (item) =>
-        item.from.getTime() === receivedObjectWithDate.from.getTime() &&
-        item.to.getTime() === receivedObjectWithDate.to.getTime(),
-    );
-
-    if (!isDateValid)
-      throw new BadRequestException(
-        slotMessages.errors.noSlotsOnTheSelectedDate,
-      );
-
-    const filter = {
-      userId,
-      date,
-      'slots.from': slot.from,
-      'slots.to': slot.to,
-      'slots.status': BookingStatus.VACANT,
-    };
-
-    const update = {
-      $set: {
-        'slots.$.status': BookingStatus.LAPSED,
-        'slots.$.customerId': req.user.id,
+    const result = await this.slotModel.findByIdAndUpdate(
+      slotDateId,
+      updatedDocument,
+      {
+        new: true,
       },
-    };
-
-    const result = await this.slotModel.findOneAndUpdate(filter, update, {
-      new: true,
-    });
-
-    if (!result)
-      throw new BadRequestException(
-        slotMessages.errors.errorWhileBookingSlotOrMightGotBooked,
-      );
-
+    );
     return result;
+
+    // old
+    // const isSlotValid = await this.slotModel.
+    // const { bookSlots } = body;
+    // const slotBookingStatusArray = [];
+    // for (let i = 0; i < bookSlots.length; i++) {
+    //   const getSlotDetails = await this.slotModel.findOne({
+    //     userId: userId,
+    //     date: bookSlots[i].date,
+    //   });
+    //   if (!getSlotDetails) return slotBookingStatusArray.push(false);
+    //   const isSlotAvailable = getSlotDetails.slots.find(
+    //     (item: any) =>
+    //       JSON.stringify(item) === JSON.stringify(bookSlots[i].slots),
+    //   );
+    // }
+    // return slotBookingStatusArray;
+    // const slotByUser = await this.slotModel.find({ userId: userId, date: body.bookSlots });
+    // return slotByUser;
+    // const user = await this.userModel.findOne({ email: req.user.email });
+    // const slotBooking = await this.slotBookingModel.create({
+    //   ...body,
+    //   customerId: user.id,
+    // });
+    // if (!slotBooking)
+    //   throw new BadRequestException(slotMessages.errors.errorWhileBookingSlot);
+    // return {
+    //   message: slotMessages.messages.slotBooked,
+    //   data: slotBooking,
+    // };
   }
 }

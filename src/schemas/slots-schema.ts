@@ -24,6 +24,9 @@ class TimeSlots {
 
   @Prop()
   customerId: string;
+
+  @Prop()
+  id: string;
 }
 
 @Schema({

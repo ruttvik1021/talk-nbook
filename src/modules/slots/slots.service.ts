@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { SlotDTO } from 'src/dtos/slotDto';
+import { SlotDTO, UpdateSlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
   BookingStatus,
@@ -10,6 +10,7 @@ import {
 } from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class SlotsService {
@@ -81,6 +82,7 @@ export class SlotsService {
       const defaultSlots = body.slots.map((slot) => ({
         ...slot,
         status: defaultStatus,
+        id: new ObjectId(),
       }));
 
       const slot = await this.slotModel.create({
@@ -94,9 +96,8 @@ export class SlotsService {
     throw new BadRequestException(slotMessages.errors.datesOverLap);
   }
 
-  async updateSlot(req: decodedRequest, body: SlotDTO, id: string) {
+  async updateSlot(req: decodedRequest, body: UpdateSlotDTO, id: string) {
     const user = await this.findUserByEmail(req.user.email);
-
     if (this.overlapCheck(body.slots)) {
       const slot = await this.slotModel.findOneAndUpdate(
         { _id: id, userId: user.id },
@@ -110,7 +111,6 @@ export class SlotsService {
         );
       return {
         message: slotMessages.messages.slotUpdated,
-        data: body,
       };
     }
     return { message: slotMessages.errors.datesOverLap };
