@@ -1,9 +1,9 @@
 import { Type } from 'class-transformer';
 import {
-  ArrayMinSize,
   ArrayNotEmpty,
   IsArray,
   IsDateString,
+  IsMongoId,
   Matches,
   ValidateIf,
   ValidateNested,
@@ -34,10 +34,13 @@ export class SlotDTO {
   slots?: TimeSlotDto[];
 }
 
-export class SlotBookingsDTO {
-  @IsArray()
-  @ArrayMinSize(1, {
-    message: slotMessages.errors.atleastOneSlotRequired,
-  })
-  bookSlots: SlotDTO[];
+export class BookSlotDTO {
+  @IsMongoId()
+  userId: string;
+
+  @IsDateString()
+  date: Date;
+
+  @ValidateIf((o) => (o.date ? true : false))
+  slot: TimeSlotDto;
 }

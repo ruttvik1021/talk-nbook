@@ -91,10 +91,14 @@ export const slotMessages = {
     idCannotBeChanged: 'Id cannot be changed',
     noSlotFound: 'No slot found',
     atleastOneSlotRequired: 'Atleast one slot required',
+    oopsSlotBooked: 'Oops slot got booked, try another slot',
 
     errorWhileBookingSlot: 'Error while booking slot',
+    errorWhileBookingSlotOrMightGotBooked:
+      'Error while booking slot or might got booked, try another slot.',
     datesOverLap: 'Dates overlap',
     toTimeMustBeGreaterThanFromTime: 'To time must be greater than from time',
+    noSlotsOnTheSelectedDate: 'No slots available on this selected date',
   },
   messages: {
     slotCreated: 'Slot created successfully',

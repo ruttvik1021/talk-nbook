@@ -77,7 +77,7 @@ export class SlotsService {
       );
 
     if (this.overlapCheck(body.slots)) {
-      const defaultStatus: BookingStatus = 'Vacant';
+      const defaultStatus = BookingStatus.VACANT;
       const defaultSlots = body.slots.map((slot) => ({
         ...slot,
         status: defaultStatus,
