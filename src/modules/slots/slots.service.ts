@@ -123,7 +123,9 @@ export class SlotsService {
   }
 
   async getSlotsByUserId(userId: string) {
-    const slotsList = await this.slotModel.find({ userId: userId });
+    const slotsList = await this.slotModel
+      .find({ userId: userId })
+      .select('-slots.customerId');
     return slotsList;
   }
 

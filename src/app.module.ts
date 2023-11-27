@@ -11,6 +11,7 @@ import { UserModule } from './modules/user/user.module';
 import { SlotsModule } from './modules/slots/slots.module';
 import { MailerService } from './mail/mail.service';
 import { BookslotsModule } from './modules/bookslots/bookslots.module';
+import { BookingsModule } from './modules/bookings/bookings.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { BookslotsModule } from './modules/bookslots/bookslots.module';
     MasterDataModule,
     SlotsModule,
     BookslotsModule,
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailerService],

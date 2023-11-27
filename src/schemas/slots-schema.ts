@@ -5,6 +5,7 @@ export enum BookingStatus {
   BOOKED = 'Booked',
   VACANT = 'Vacant',
   LAPSED = 'Lapsed',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum PaymentStatus {

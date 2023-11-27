@@ -35,4 +35,7 @@ export const slotsUrl = {
 
 export const slotBookingUrls = {
   bookSlotOfServiceProvider: '/book/slot/user',
+  cancelBooking: '/cancel/booking',
+  myBookings: '/myBookings',
+  myAppointments: '/myAppointments',
 };

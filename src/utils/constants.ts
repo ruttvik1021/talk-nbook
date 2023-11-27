@@ -88,6 +88,7 @@ export const slotMessages = {
     slotsAlreadyCreatedForThisDateUpdateThisDate:
       'Slots already created for this date, update the date to add/remove slots',
     errorWhileUpdatingSlot: 'Error while updating slot',
+    errorWhileCancellingSlot: 'Error while cancelling slot',
     idCannotBeChanged: 'Id cannot be changed',
     noSlotFound: 'No slot found',
     atleastOneSlotRequired: 'Atleast one slot required',
@@ -99,6 +100,9 @@ export const slotMessages = {
     datesOverLap: 'Dates overlap',
     toTimeMustBeGreaterThanFromTime: 'To time must be greater than from time',
     noSlotsOnTheSelectedDate: 'No slots available on this selected date',
+    slotTimingPassedYouCannotCancelTheSlot:
+      'Slot timing passed, you cannot cancel the slot.',
+    noBookingFound: 'No Booking found',
   },
   messages: {
     slotCreated: 'Slot created successfully',
@@ -106,6 +110,7 @@ export const slotMessages = {
     slotUpdated: 'Slot updated successfully',
 
     slotBooked: 'Slot booked successfully',
+    slotBookingCancelled: 'Slot booking cancelled.',
   },
 };
 

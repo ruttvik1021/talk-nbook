@@ -17,7 +17,6 @@ import { authorizedUrls, slotsUrl } from 'src/utils/urls';
 import { SlotsService } from './slots.service';
 
 @Controller(authorizedUrls)
-@UseGuards(ServiceProviderGuard)
 export class SlotsController {
   constructor(private readonly slotService: SlotsService) {}
 
@@ -26,6 +25,7 @@ export class SlotsController {
     return this.slotService.getSlotsByUserId(userId);
   }
 
+  @UseGuards(ServiceProviderGuard)
   @Put(slotsUrl.slotUrlId)
   async updateSlot(
     @Req() req: Request,
@@ -35,16 +35,19 @@ export class SlotsController {
     return this.slotService.updateSlot(req, body, id);
   }
 
+  @UseGuards(ServiceProviderGuard)
   @Delete(slotsUrl.slotUrlId)
   async deleteSlot(@Param('id', ObjectIdValidationPipe) id: string) {
     return this.slotService.deleteSlot(id);
   }
 
+  @UseGuards(ServiceProviderGuard)
   @Post(slotsUrl.slotUrl)
   async createSlot(@Req() req: Request, @Body() body: SlotDTO) {
     return this.slotService.createSlot(req, body);
   }
 
+  @UseGuards(ServiceProviderGuard)
   @Get(slotsUrl.slotUrl)
   async getSlots(@Req() req: Request) {
     return this.slotService.getSlots(req);
