@@ -103,6 +103,7 @@ export const slotMessages = {
     slotTimingPassedYouCannotCancelTheSlot:
       'Slot timing passed, you cannot cancel the slot.',
     noBookingFound: 'No Booking found',
+    slotDateExpired: 'Slot date expired',
   },
   messages: {
     slotCreated: 'Slot created successfully',

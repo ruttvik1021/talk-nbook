@@ -50,6 +50,22 @@ export class BookslotsService {
       new ObjectId(item.id).equals(new ObjectId(slotTimeId)),
     );
 
+    if (new Date(dateSlot.date) < new Date()) {
+      const updatedSLots = dateSlot.slots.map((item, index) => {
+        if (index === timeSlotIndex) {
+          return {
+            ...item,
+            status: BookingStatus.EXPIRED,
+          };
+        }
+        return item;
+      });
+
+      dateSlot.slots = updatedSLots;
+      await this.slotModel.findByIdAndUpdate(slotDateId, dateSlot);
+      throw new BadRequestException(slotMessages.errors.slotDateExpired);
+    }
+
     if (
       dateSlot.slots[timeSlotIndex].status === BookingStatus.BOOKED ||
       dateSlot.slots[timeSlotIndex].status === BookingStatus.LAPSED

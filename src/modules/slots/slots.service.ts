@@ -118,14 +118,19 @@ export class SlotsService {
 
   async getSlots(req: decodedRequest) {
     const user = await this.findUserByEmail(req.user.email);
-    const slotsList = await this.slotModel.find({ userId: user.id });
+    const slotsList = await this.slotModel
+      .find({ userId: user.id })
+      .sort({ date: 1, 'slots.from': 1 })
+      .exec();
     return slotsList;
   }
 
   async getSlotsByUserId(userId: string) {
     const slotsList = await this.slotModel
       .find({ userId: userId })
-      .select('-slots.customerId');
+      .select('-slots.customerId')
+      .sort({ date: 1, 'slots.from': 1 })
+      .exec();
     return slotsList;
   }
 
