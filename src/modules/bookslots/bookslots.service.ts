@@ -9,7 +9,6 @@ import { Model } from 'mongoose';
 import { BookSlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
-  BookingStatus,
   SLOTSBOOKING_MODEL,
   SLOTS_MODEL,
   SlotBookingsDocument,
@@ -20,6 +19,7 @@ import { slotMessages, userMessages } from 'src/utils/constants';
 import { MailerService } from '../../mail/mail.service';
 import { BOOKINGS_MODEL, BookingsDocument } from 'src/schemas/bookings-schema';
 import { BookingsDTO } from 'src/dtos/bookingsDTO';
+import { BookingStatus } from 'src/utils/enums';
 
 @Injectable()
 export class BookslotsService {

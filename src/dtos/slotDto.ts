@@ -9,8 +9,8 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
-import { BookingStatus } from 'src/schemas/slots-schema';
 import { slotMessages } from 'src/utils/constants';
+import { BookingStatus } from 'src/utils/enums';
 
 class TimeSlotDto {
   @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {

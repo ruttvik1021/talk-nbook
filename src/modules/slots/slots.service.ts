@@ -3,14 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SlotDTO, UpdateSlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
-import {
-  BookingStatus,
-  SLOTS_MODEL,
-  SlotsDocument,
-} from 'src/schemas/slots-schema';
+import { SLOTS_MODEL, SlotsDocument } from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
 import { ObjectId } from 'mongodb';
+import { BookingStatus } from 'src/utils/enums';
 
 @Injectable()
 export class SlotsService {

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { BookingStatus } from './slots-schema';
+import { BookingStatus } from 'src/utils/enums';
 
 @Schema({
   timestamps: true,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import { BookingStatus } from 'src/schemas/slots-schema';
+import { BookingStatus } from 'src/utils/enums';
 
 interface ISendMail {
   to: string;
