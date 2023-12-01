@@ -7,9 +7,6 @@ class Certifications {
   name: string;
 
   @Prop()
-  photoType: string;
-
-  @Prop()
   photo: string;
 }
 
@@ -61,11 +58,8 @@ export class Users {
   @Prop({ enum: GENDER })
   gender: GENDER;
 
-  @Prop({ required: false })
-  profilePicType: string;
-
-  @Prop({ required: false })
-  profilePic: string;
+  @Prop({ default: '' })
+  profilePhoto: string;
 
   @Prop({ type: [String] })
   prefferedSpecializations: string[];
