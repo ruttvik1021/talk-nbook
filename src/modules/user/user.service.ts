@@ -22,9 +22,13 @@ export class UserService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  private async uploadProfilePhoto(photo: string, userEmail: string) {
+  private async uploadProfilePhoto(
+    photo: string,
+    userEmail: string,
+    userId: string,
+  ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
-      await this.cloudinaryService.uploadProfileImage(photo, userEmail);
+      await this.cloudinaryService.uploadProfileImage(photo, userEmail, userId);
 
     return uploadedPhoto.secure_url;
   }
@@ -33,18 +37,24 @@ export class UserService {
     photo: string,
     userEmail: string,
     index: number,
+    userId: string,
   ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
       await this.cloudinaryService.uploadCertificateImage(
         photo,
         userEmail,
         index,
+        userId,
       );
 
     return uploadedPhoto.secure_url;
   }
 
-  private async updateSpecializations(specializations: any, userEmail: string) {
+  private async updateSpecializations(
+    specializations: any,
+    userEmail: string,
+    userId: string,
+  ) {
     return Promise.all(
       specializations.map(async (specialization) => ({
         ...specialization,
@@ -56,6 +66,7 @@ export class UserService {
                 item.photo,
                 userEmail,
                 index,
+                userId,
               ),
             }),
           ),
@@ -66,6 +77,7 @@ export class UserService {
 
   async updateProfile(req: decodedRequest, body: UpdateUserDTO) {
     const userEmail = req.user.email;
+    const userId = req.user.id;
 
     // Ensure the user exists
     const userByToken = await this.userModel.findOne({
@@ -84,6 +96,7 @@ export class UserService {
     const uploadedProfilePhoto = await this.uploadProfilePhoto(
       body.profilePhoto,
       userEmail,
+      userId,
     );
 
     // Update specializations
@@ -91,6 +104,7 @@ export class UserService {
       const updatedSpecializationArray = await this.updateSpecializations(
         body.specializations,
         userEmail,
+        userId,
       );
       body.specializations = updatedSpecializationArray;
     }
