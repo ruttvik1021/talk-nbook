@@ -1,10 +1,13 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
   ArrayMinSize,
+  ArrayUnique,
   IsArray,
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -14,6 +17,8 @@ import {
   MinLength,
   ValidateIf,
   ValidateNested,
+  ValidationOptions,
+  registerDecorator,
 } from 'class-validator';
 import { userMessages } from 'src/utils/constants';
 import { ArrayElementIsObjectId } from 'src/utils/validators/array-element-is-objectId-validator';
@@ -25,18 +30,16 @@ export enum GENDER {
   OTHER = 'OTHER',
 }
 
-class Certifications {
+export class Certifications {
   @IsNotEmpty()
   name: string;
-
-  @IsNotEmpty()
-  photoType: string;
 
   @IsNotEmpty()
   photo: string;
 }
 
-class Specialization {
+export class Specialization {
+  @IsMongoId()
   @IsNotEmpty({ message: userMessages.errors.specializationIdRequired })
   specializationId: string;
 
@@ -46,6 +49,9 @@ class Specialization {
   @Type(() => Certifications)
   @ArrayMinSize(1, {
     message: userMessages.errors.certificateMustBeAtleastOne,
+  })
+  @ArrayMaxSize(3, {
+    message: userMessages.errors.maximumCertificatedOnlyThree,
   })
   certificates: Certifications[];
 }
@@ -82,13 +88,8 @@ export class UpdateUserDTO {
   @IsEnum(GENDER)
   gender: GENDER;
 
-  @IsOptional()
   @IsString()
-  profilePicType: string;
-
-  @IsOptional()
-  @IsString()
-  profilePic: string;
+  profilePhoto: string;
 
   @IsArray()
   @ArrayElementIsObjectId({
@@ -112,9 +113,15 @@ export class UpdateUserDTO {
   @ValidateIf((o) => o.isServiceProvider === true)
   @IsArray()
   @ValidateNested({ each: true })
+  @IsSpecializationIdUnique({
+    message: userMessages.errors.dublicateSpecializationDetected,
+  })
   @Type(() => Specialization)
   @ArrayMinSize(1, {
     message: userMessages.errors.specializationMustBeAtleastOne,
+  })
+  @ArrayMaxSize(2, {
+    message: userMessages.errors.maximumSpecializationOnlyTwo,
   })
   specializations: Specialization[];
 
@@ -123,6 +130,7 @@ export class UpdateUserDTO {
     message: userMessages.errors.languagesMustBeAtleastOne,
   })
   @ArrayElementIsObjectId({ message: userMessages.errors.invalidIdInLanguages })
+  @ArrayUnique({ message: userMessages.errors.dublicateLanguagesDetected })
   languages: string[];
 }
 
@@ -140,4 +148,30 @@ export class GetUserBySpecilizationDTO {
   @IsOptional()
   @IsNumber()
   offset: number;
+}
+
+function IsSpecializationIdUnique(validationOptions?: ValidationOptions) {
+  return function (object: any, propertyName: string): void {
+    registerDecorator({
+      name: 'isSpecializationIdUnique',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: Specialization[], args: any): boolean {
+          const specializationIds = new Set<string>();
+
+          for (const specialization of value) {
+            if (specializationIds.has(specialization.specializationId)) {
+              return false; // Validation failed, specializationId is not unique
+            }
+
+            specializationIds.add(specialization.specializationId);
+          }
+
+          return true; // Validation passed, specializationId is unique for all elements
+        },
+      },
+    });
+  };
 }

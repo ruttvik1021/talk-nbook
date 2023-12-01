@@ -12,6 +12,7 @@ import { SlotsModule } from './modules/slots/slots.module';
 import { MailerService } from './mail/mail.service';
 import { BookslotsModule } from './modules/bookslots/bookslots.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { BookingsModule } from './modules/bookings/bookings.module';
     SlotsModule,
     BookslotsModule,
     BookingsModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailerService],

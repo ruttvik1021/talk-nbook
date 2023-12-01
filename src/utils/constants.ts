@@ -1,3 +1,5 @@
+export const CLOUDINARY = 'Cloudinary';
+
 export const otpMessages = {
   errors: {
     otpExpired: 'Otp expired',
@@ -59,7 +61,9 @@ export const userMessages = {
   errors: {
     emailMustBeValid: 'Email must be valid',
     specializationMustBeAtleastOne: 'Specialization must be atleast one',
+    maximumSpecializationOnlyTwo: 'Specialization must be maximum two',
     certificateMustBeAtleastOne: 'Certificate must be atleast one',
+    maximumCertificatedOnlyThree: 'Certificate must be maximum three',
     locationMustBeAtleastOne: 'Location must be atleast one',
     languagesMustBeAtleastOne: 'Languages must be atleast one',
     mobileNumberRequired: 'Mobile number is required',
@@ -75,6 +79,11 @@ export const userMessages = {
     maxLengthForAbout: 'Maximum characters exceeds',
     locationLength: 'Each location must be at most 50 characters',
     specializationIdRequired: 'Specialization is required',
+    errorWhileUploadingProfileImage: 'Error while uploading profile image',
+    errorWhileUploadingCertificateImage:
+      'Error while uploading certificate image',
+    dublicateLanguagesDetected: 'Dublicate language detected',
+    dublicateSpecializationDetected: 'Dublicate specialization detected',
   },
   messages: {
     userUpdated: 'User Updated',
