@@ -2,21 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { GENDER } from 'src/dtos/userDto';
 
-class Certifications {
-  @Prop()
-  name: string;
-
-  @Prop()
-  photo: string;
-}
-
 @Schema()
 class Specialization {
   @Prop()
   specializationId: string;
 
-  @Prop({ type: [Certifications] }) // Specify the array type
-  certificates: Certifications[];
+  @Prop({ type: [String] }) // Specify the array type
+  certificates: string[];
 }
 
 @Schema({

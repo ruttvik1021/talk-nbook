@@ -4,15 +4,12 @@ import { UploadApiErrorResponse, UploadApiResponse } from 'cloudinary';
 import { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PaginationDTO } from 'src/dtos/masterDto';
-import {
-  Certifications,
-  GetUserBySpecilizationDTO,
-  UpdateUserDTO,
-} from 'src/dtos/userDto';
+import { GetUserBySpecilizationDTO, UpdateUserDTO } from 'src/dtos/userDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { userMessages } from 'src/utils/constants';
 import { RoleEnums } from 'src/utils/enums';
+import { validateImageSize } from 'src/utils/image-size-validation';
 
 @Injectable()
 export class UserService {
@@ -28,7 +25,12 @@ export class UserService {
     userId: string,
   ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
-      await this.cloudinaryService.uploadProfileImage(photo, userEmail, userId);
+      await this.cloudinaryService.uploadProfileImage(
+        // photo,
+        validateImageSize(photo),
+        userEmail,
+        userId,
+      );
 
     return uploadedPhoto.secure_url;
   }
@@ -41,7 +43,8 @@ export class UserService {
   ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
       await this.cloudinaryService.uploadCertificateImage(
-        photo,
+        // photo,
+        validateImageSize(photo),
         userEmail,
         index,
         userId,
@@ -60,15 +63,8 @@ export class UserService {
         ...specialization,
         certificates: await Promise.all(
           specialization.certificates.map(
-            async (item: Certifications, index: number) => ({
-              ...item,
-              photo: await this.uploadCertificatePhoto(
-                item.photo,
-                userEmail,
-                index,
-                userId,
-              ),
-            }),
+            async (item: string, index: number) =>
+              await this.uploadCertificatePhoto(item, userEmail, index, userId),
           ),
         ),
       })),
@@ -79,10 +75,11 @@ export class UserService {
     const userEmail = req.user.email;
     const userId = req.user.id;
     const mobileNumber = body.mobileNumber;
-    const isMobileNumberUsed = await this.userModel.findOne({
+    const isMobileNumberUsed = await this.userModel.find({
+      email: { $ne: userEmail },
       mobileNumber,
     });
-    if (isMobileNumberUsed)
+    if (isMobileNumberUsed.length)
       throw new BadRequestException(
         userMessages.errors.mobileNumberAlreadyUsed,
       );
@@ -105,7 +102,6 @@ export class UserService {
       userEmail,
       userId,
     );
-
     // Update specializations
     if (body.specializations.length && body.isServiceProvider) {
       const updatedSpecializationArray = await this.updateSpecializations(
