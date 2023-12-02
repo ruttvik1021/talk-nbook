@@ -141,6 +141,9 @@ export const authenticationConstants = {
 export const commonMessages = {
   errors: {
     notValidId: 'Id not valid',
+    imageSizeExceeds: 'Image size exceeds the maximum allowed size of 500KB.',
+    invalidImageType:
+      'Invalid image type. Allowed types are jpg, jpeg, and png.',
   },
 };
 

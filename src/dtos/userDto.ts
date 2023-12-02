@@ -30,14 +30,6 @@ export enum GENDER {
   OTHER = 'OTHER',
 }
 
-export class Certifications {
-  @IsNotEmpty()
-  name: string;
-
-  @IsNotEmpty()
-  photo: string;
-}
-
 export class Specialization {
   @IsMongoId()
   @IsNotEmpty({ message: userMessages.errors.specializationIdRequired })
@@ -45,15 +37,13 @@ export class Specialization {
 
   @ValidateIf((o) => (o.specializationId ? true : false))
   @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => Certifications)
   @ArrayMinSize(1, {
     message: userMessages.errors.certificateMustBeAtleastOne,
   })
   @ArrayMaxSize(3, {
     message: userMessages.errors.maximumCertificatedOnlyThree,
   })
-  certificates: Certifications[];
+  certificates: string[];
 }
 
 export class UpdateUserDTO {
