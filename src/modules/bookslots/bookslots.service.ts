@@ -41,6 +41,7 @@ export class BookslotsService {
     const { id } = req.user;
     const { userId, slotTimeId, slotDateId } = body;
     const userDetails = await this.userModel.findById(userId);
+    const customerDetails = await this.userModel.findById(id, { name: 1 });
     if (!userDetails)
       throw new BadRequestException(userMessages.errors.noUserFound);
 
@@ -89,7 +90,8 @@ export class BookslotsService {
     const addBooking = await this.bookingsModel.create({
       userId,
       customerId: id,
-      slotDateId,
+      userName: userDetails.name,
+      customerName: customerDetails.name,
       slotTimeId,
       status: BookingStatus.BOOKED,
     });

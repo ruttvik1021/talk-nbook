@@ -68,6 +68,7 @@ export const userMessages = {
     languagesMustBeAtleastOne: 'Languages must be atleast one',
     mobileNumberRequired: 'Mobile number is required',
     mobileNumberMustBe10Digits: 'Mobile number must be 10 digits',
+    mobileNumberAlreadyUsed: 'Mobile number already used',
     noUserFound: 'No user found',
     emailCannotBeUpdated: 'Email cannot be updated',
     invalidIdInPreferences: 'Invalid Id in preferences',
@@ -75,7 +76,7 @@ export const userMessages = {
     errorWhileSavingUser: 'Error while saving user',
     mustBeInPattern:
       'Mobilenumber must be in the format +{countrycode}-{number}.',
-    dateFormatIncorrect: 'Date format must be DD/MM/YYYY ',
+    dateFormatIncorrect: 'Date format must be DD/MM/YYYY',
     maxLengthForAbout: 'Maximum characters exceeds',
     locationLength: 'Each location must be at most 50 characters',
     specializationIdRequired: 'Specialization is required',
@@ -140,5 +141,12 @@ export const authenticationConstants = {
 export const commonMessages = {
   errors: {
     notValidId: 'Id not valid',
+  },
+};
+
+export const bookingMessages = {
+  errors: {},
+  messages: {
+    noDetailsAvailable: 'No details available',
   },
 };

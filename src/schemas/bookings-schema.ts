@@ -10,7 +10,13 @@ export class Bookings {
   customerId: string;
 
   @Prop()
+  customerName: string;
+
+  @Prop()
   userId: string;
+
+  @Prop()
+  userName: string;
 
   @Prop()
   slotDateId: string;
