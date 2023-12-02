@@ -62,6 +62,7 @@ export class OtpflowService {
         validTill: validTill,
       },
     );
+    await this.sendOtpModel.deleteMany({ validTill: { $lt: new Date() } });
     await this.mailerService.sendMail({
       to: userEmail,
       subject: 'Otp for Login',
