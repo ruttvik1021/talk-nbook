@@ -81,7 +81,7 @@ export class UpdateUserDTO {
 
   @IsString()
   @IsDateFormatValid({
-    message: `Date of birth ${userMessages.errors.dateFormatIncorrect}`,
+    message: userMessages.errors.dateFormatIncorrect,
   })
   dateOfBirth: string;
 

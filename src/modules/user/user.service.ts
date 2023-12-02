@@ -7,12 +7,12 @@ import { PaginationDTO } from 'src/dtos/masterDto';
 import {
   Certifications,
   GetUserBySpecilizationDTO,
-  Specialization,
   UpdateUserDTO,
 } from 'src/dtos/userDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { userMessages } from 'src/utils/constants';
+import { RoleEnums } from 'src/utils/enums';
 
 @Injectable()
 export class UserService {
@@ -78,8 +78,15 @@ export class UserService {
   async updateProfile(req: decodedRequest, body: UpdateUserDTO) {
     const userEmail = req.user.email;
     const userId = req.user.id;
+    const mobileNumber = body.mobileNumber;
+    const isMobileNumberUsed = await this.userModel.findOne({
+      mobileNumber,
+    });
+    if (isMobileNumberUsed)
+      throw new BadRequestException(
+        userMessages.errors.mobileNumberAlreadyUsed,
+      );
 
-    // Ensure the user exists
     const userByToken = await this.userModel.findOne({
       email: userEmail,
     });
@@ -100,7 +107,7 @@ export class UserService {
     );
 
     // Update specializations
-    if (body.specializations.length) {
+    if (body.specializations.length && body.isServiceProvider) {
       const updatedSpecializationArray = await this.updateSpecializations(
         body.specializations,
         userEmail,
@@ -142,6 +149,7 @@ export class UserService {
       const users = await this.userModel
         .find({
           isServiceProvider: true,
+          role: RoleEnums.USER,
           'specializations.specializationId': { $in: specializations },
         })
         .skip(offset)
@@ -159,7 +167,13 @@ export class UserService {
 
   async getAllUsersList(body: PaginationDTO) {
     const { limit, offset } = body;
-    const users = await this.userModel.find().skip(offset).limit(limit);
+    const users = await this.userModel
+      .find({
+        role: RoleEnums.USER,
+      })
+      .skip(offset)
+      .limit(limit)
+      .exec();
     return users;
   }
 
