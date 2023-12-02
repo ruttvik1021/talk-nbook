@@ -26,7 +26,6 @@ export class UserService {
   ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
       await this.cloudinaryService.uploadProfileImage(
-        // photo,
         validateImageSize(photo),
         userEmail,
         userId,
@@ -43,7 +42,6 @@ export class UserService {
   ) {
     const uploadedPhoto: UploadApiResponse | UploadApiErrorResponse =
       await this.cloudinaryService.uploadCertificateImage(
-        // photo,
         validateImageSize(photo),
         userEmail,
         index,
@@ -119,6 +117,7 @@ export class UserService {
         ...body,
         isProfileComplete: true,
         profilePhoto: uploadedProfilePhoto,
+        role: req.user.role,
       },
       { returnOriginal: false },
     );

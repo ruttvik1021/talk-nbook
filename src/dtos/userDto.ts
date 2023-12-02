@@ -63,9 +63,6 @@ export class UpdateUserDTO {
   isActive: boolean;
 
   @IsString()
-  role: string;
-
-  @IsString()
   @MaxLength(255, { message: userMessages.errors.maxLengthForAbout })
   about: string;
 
