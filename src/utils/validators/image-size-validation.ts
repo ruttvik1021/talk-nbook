@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import * as sizeOf from 'image-size';
-import { commonMessages } from './constants';
+import { commonMessages } from '../constants';
 
 export const validateImageSize = (base64EncodedImage: string) => {
   // Extract the base64 data

@@ -13,6 +13,7 @@ import { MailerService } from './mail/mail.service';
 import { BookslotsModule } from './modules/bookslots/bookslots.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ReviewsAndReportsModule } from './modules/reviews-and-reports/reviews-and-reports.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     BookslotsModule,
     BookingsModule,
     CloudinaryModule,
+    ReviewsAndReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailerService],

@@ -4,20 +4,23 @@ import {
   BOOKINGDETAILS_MODEL,
   BookingDetailsSchema,
 } from 'src/schemas/booking-details-schema';
-import { SLOTS_MODEL, SlotSchema } from 'src/schemas/slots-schema';
+import {
+  REVIEWS_MODEL,
+  ReviewsSchema,
+} from 'src/schemas/reviews-reports-schema';
+import { ReviewsAndReportsController } from './reviews-and-reports.controller';
+import { ReviewsAndReportsService } from './reviews-and-reports.service';
 import { USER_MODEL, UserSchema } from 'src/schemas/user-schema';
-import { BookingsController } from './bookings.controller';
-import { BookingsService } from './bookings.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
+      { name: REVIEWS_MODEL, schema: ReviewsSchema },
       { name: BOOKINGDETAILS_MODEL, schema: BookingDetailsSchema },
       { name: USER_MODEL, schema: UserSchema },
-      { name: SLOTS_MODEL, schema: SlotSchema },
     ]),
   ],
-  providers: [BookingsService],
-  controllers: [BookingsController],
+  providers: [ReviewsAndReportsService],
+  controllers: [ReviewsAndReportsController],
 })
-export class BookingsModule {}
+export class ReviewsAndReportsModule {}

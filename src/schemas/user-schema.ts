@@ -47,7 +47,7 @@ export class Users {
   @Prop({ default: '' })
   dateOfBirth: string;
 
-  @Prop({ enum: GENDER })
+  @Prop({ enum: GENDER, default: GENDER.OTHER })
   gender: GENDER;
 
   @Prop({ default: '' })

@@ -153,3 +153,23 @@ export const bookingMessages = {
     noDetailsAvailable: 'No details available',
   },
 };
+
+export const reviewMessages = {
+  error: {
+    reviewMustBeBelow250Characters: 'Review must be below 250 characters',
+    alreadyRatedPleaseUpdateTheExistingReview:
+      'Already rated, please update the existing review.',
+    errorWhileAddingReview: 'Error while adding review',
+    reviewNotFound: 'Review not found',
+    errorWhileUpdatingReview: 'Error while updating review',
+    errorWhileDeletingReview: 'Error while deleting review',
+    youCannotRateWithoutUsingService:
+      'You cannot rate without using the service.',
+    ratingMustBeBetweenZeroAndFive: 'Rating must be between 0 and 5',
+  },
+  messages: {
+    reviewAddedSuccessfully: 'Review added successfully',
+    reviewUpdatedSuccessfully: 'Review updated successfully',
+    reviewDeletedSuccessfully: 'Review deleted successfully',
+  },
+};

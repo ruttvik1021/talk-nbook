@@ -14,19 +14,20 @@ import { Document } from 'mongoose';
     },
   },
 })
-export class SendOtp {
+export class Reviews {
   @Prop({ required: true })
-  email: string;
+  userId: string;
 
   @Prop({ required: true })
-  validTill: Date;
+  customerId: string;
 
-  @Prop({ required: true })
-  otp: number;
+  @Prop({ required: true, default: 0 })
+  ratings: number;
+
+  @Prop({ default: '' })
+  review: string;
 }
 
-export type SendOtpDocument = SendOtp & Document;
-
-export const SendOtpSchema = SchemaFactory.createForClass(SendOtp);
-
-export const SEND_OTP_MODEL = SendOtp.name;
+export type ReviewsDocument = Reviews & Document;
+export const ReviewsSchema = SchemaFactory.createForClass(Reviews);
+export const REVIEWS_MODEL = Reviews.name;

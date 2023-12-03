@@ -130,8 +130,7 @@ export class MailerService {
               : BookingStatus.LAPSED
                 ? 'initiated'
                 : ''
-        } with ${serviceProviderName}. Below are the booking details:</p>
-        <p>Date: ${date} from ${slotTimefrom} to ${slotTimeto}</p>
+        } with ${serviceProviderName}
         ${
           !BookingStatus.CANCELLED
             ? `<p>This is your BookingId for your ref. <strong>${bookingId}</strong></p>`
