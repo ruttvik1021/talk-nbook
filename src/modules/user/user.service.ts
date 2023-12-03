@@ -6,6 +6,10 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { PaginationDTO } from 'src/dtos/masterDto';
 import { GetUserBySpecilizationDTO, UpdateUserDTO } from 'src/dtos/userDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
+import {
+  REVIEWS_MODEL,
+  ReviewsDocument,
+} from 'src/schemas/reviews-reports-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { userMessages } from 'src/utils/constants';
 import { RoleEnums } from 'src/utils/enums';
@@ -15,9 +19,16 @@ import { validateImageSize } from 'src/utils/validators/image-size-validation';
 export class UserService {
   constructor(
     @InjectModel(USER_MODEL) private readonly userModel: Model<UserDocument>,
+    @InjectModel(REVIEWS_MODEL)
+    private readonly reviewModel: Model<ReviewsDocument>,
 
     private readonly cloudinaryService: CloudinaryService,
   ) {}
+
+  private calculateAverageRating = (ratings: any, key: string) =>
+    ratings.length === 0
+      ? 0
+      : ratings.reduce((sum, rating) => sum + rating[key], 0) / ratings.length;
 
   private async uploadProfilePhoto(
     photo: string,
@@ -94,13 +105,14 @@ export class UserService {
       throw new BadRequestException(userMessages.errors.emailCannotBeUpdated);
     }
 
-    // Upload profile photo
-    const uploadedProfilePhoto = await this.uploadProfilePhoto(
-      body.profilePhoto,
-      userEmail,
-      userId,
-    );
-    // Update specializations
+    let uploadedProfilePhoto = '';
+    if (body.profilePhoto) {
+      uploadedProfilePhoto = await this.uploadProfilePhoto(
+        body.profilePhoto,
+        userEmail,
+        userId,
+      );
+    }
     if (body.specializations.length && body.isServiceProvider) {
       const updatedSpecializationArray = await this.updateSpecializations(
         body.specializations,
@@ -109,8 +121,6 @@ export class UserService {
       );
       body.specializations = updatedSpecializationArray;
     }
-
-    // Update user profile in MongoDB
     const updatedUser = await this.userModel.findOneAndUpdate(
       { email: userEmail },
       {
@@ -132,32 +142,50 @@ export class UserService {
   }
 
   async getProfile(req: decodedRequest) {
-    const userDetails = await this.userModel.findOne({ email: req.user.email });
+    const userDetails = await this.userModel.findOne(
+      { email: req.user.email },
+      { role: 0, _id: 0 },
+    );
     if (!userDetails)
       throw new BadRequestException(userMessages.errors.noUserFound);
+
     return userDetails;
   }
 
   async getAllServiceProviders(body: GetUserBySpecilizationDTO) {
     const { specializations, limit, offset } = body;
-    if (specializations.length) {
-      const users = await this.userModel
-        .find({
+
+    const usersQuery = specializations.length
+      ? {
           isServiceProvider: true,
           role: RoleEnums.USER,
           'specializations.specializationId': { $in: specializations },
-        })
-        .skip(offset)
-        .limit(limit)
-        .exec();
-      return users;
-    } else {
-      const users = await this.userModel
-        .find({ isServiceProvider: true })
-        .skip(offset)
-        .limit(limit);
-      return users;
-    }
+        }
+      : { isServiceProvider: true };
+
+    const users = await this.userModel
+      .find(usersQuery)
+      .skip(offset)
+      .limit(limit)
+      .exec();
+
+    const usersWithRatings = await Promise.all(
+      users.map(async (user) => {
+        const ratings = await this.reviewModel
+          .find({ userId: user._id })
+          .select('ratings')
+          .exec();
+        const averageRating = this.calculateAverageRating(ratings, 'ratings');
+
+        return {
+          ...user.toJSON(),
+          averageRating: averageRating,
+          totalReviews: ratings.length,
+        };
+      }),
+    );
+
+    return usersWithRatings;
   }
 
   async getAllUsersList(body: PaginationDTO) {

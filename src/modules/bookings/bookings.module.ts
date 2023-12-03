@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common';
-import { BookingsService } from './bookings.service';
-import { BookingsController } from './bookings.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { BOOKINGS_MODEL, BookingSchema } from 'src/schemas/bookings-schema';
-import { USER_MODEL, UserSchema } from 'src/schemas/user-schema';
+import {
+  BOOKINGDETAILS_MODEL,
+  BookingDetailsSchema,
+} from 'src/schemas/booking-details-schema';
 import { SLOTS_MODEL, SlotSchema } from 'src/schemas/slots-schema';
+import { USER_MODEL, UserSchema } from 'src/schemas/user-schema';
+import { BookingsController } from './bookings.controller';
+import { BookingsService } from './bookings.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: BOOKINGS_MODEL, schema: BookingSchema },
+      { name: BOOKINGDETAILS_MODEL, schema: BookingDetailsSchema },
       { name: USER_MODEL, schema: UserSchema },
       { name: SLOTS_MODEL, schema: SlotSchema },
     ]),

@@ -1,4 +1,4 @@
-import { IsMongoId, IsNumber, IsString, MaxLength } from 'class-validator';
+import { IsMongoId, IsNumber, IsString, Max, MaxLength } from 'class-validator';
 import { reviewMessages } from 'src/utils/constants';
 
 export class ReviewsDTO {
@@ -6,6 +6,9 @@ export class ReviewsDTO {
   userId: string;
 
   @IsNumber()
+  @Max(5, {
+    message: reviewMessages.error.ratingMustBeBetweenZeroAndFive,
+  })
   ratings: number;
 
   @IsString()

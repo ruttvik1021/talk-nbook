@@ -42,4 +42,8 @@ export const slotBookingUrls = {
 
 export const reviewAndReportsUrls = {
   review: 'review',
+  deleteReview: 'delete/review/:id',
+  reviews: 'reviews',
+  reviewOfServiceProvider: 'reviews/serviceprovider/:id',
+  reviewsByUser: 'reviews/user',
 };

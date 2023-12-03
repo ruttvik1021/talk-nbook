@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { SlotDTO, UpdateSlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { SLOTS_MODEL, SlotsDocument } from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
-import { ObjectId } from 'mongodb';
 import { BookingStatus } from 'src/utils/enums';
 
 @Injectable()
@@ -101,7 +101,6 @@ export class SlotsService {
         { ...body },
         { returnOriginal: false },
       );
-
       if (!slot)
         throw new BadRequestException(
           slotMessages.errors.errorWhileUpdatingSlot,
@@ -119,16 +118,86 @@ export class SlotsService {
       .find({ userId: user.id })
       .sort({ date: 1, 'slots.from': 1 })
       .exec();
-    return slotsList;
+
+    const updateSlots = slotsList.map((item: SlotsDocument) => {
+      const currentDate = new Date();
+
+      if (new Date(item.date) < currentDate) {
+        const updatedSlots = item.slots.map((slot) => ({
+          ...slot,
+          status: BookingStatus.EXPIRED,
+          id: item.id,
+        }));
+        item.slots = updatedSlots;
+        return item;
+      } else if (
+        new Date(item.date).toISOString().split('T')[0] ===
+        currentDate.toISOString().split('T')[0]
+      ) {
+        const updatedSlots = item.slots.map((slot) => {
+          const slotFromTime = `${item.date.split('T')[0]}T${slot.from}:00Z`;
+          if (new Date(slotFromTime) < currentDate) {
+            return {
+              ...slot,
+              status: BookingStatus.EXPIRED,
+              id: item.id,
+            };
+          } else {
+            return slot;
+          }
+        });
+        item.slots = updatedSlots;
+        return item;
+      } else {
+        return item;
+      }
+    });
+
+    return updateSlots;
   }
 
   async getSlotsByUserId(userId: string) {
     const slotsList = await this.slotModel
-      .find({ userId: userId })
+      .find({ userId })
       .select('-slots.customerId')
       .sort({ date: 1, 'slots.from': 1 })
       .exec();
-    return slotsList;
+
+    const updateSlots = slotsList.map((item: SlotsDocument) => {
+      const currentDate = new Date();
+
+      if (new Date(item.date) < currentDate) {
+        const updatedSlots = item.slots.map((slot) => ({
+          ...slot,
+          status: BookingStatus.EXPIRED,
+          id: item.id,
+        }));
+        item.slots = updatedSlots;
+        return item;
+      } else if (
+        new Date(item.date).toISOString().split('T')[0] ===
+        currentDate.toISOString().split('T')[0]
+      ) {
+        const updatedSlots = item.slots.map((slot) => {
+          const slotFromTime = `${item.date.split('T')[0]}T${slot.from}:00Z`;
+          if (new Date(slotFromTime) < currentDate) {
+            return {
+              ...slot,
+              status: BookingStatus.EXPIRED,
+              id: item.id,
+            };
+          } else {
+            return slot;
+          }
+        });
+        item.slots = updatedSlots;
+        return item;
+      } else {
+        return item;
+      }
+    });
+
+    return updateSlots;
   }
 
   async deleteSlot(id: string) {

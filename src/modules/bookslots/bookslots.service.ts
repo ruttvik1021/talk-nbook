@@ -6,33 +6,28 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
+import { BookingsDTO } from 'src/dtos/bookingsDTO';
 import { BookSlotDTO } from 'src/dtos/slotDto';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
-  SLOTSBOOKING_MODEL,
-  SLOTS_MODEL,
-  SlotBookingsDocument,
-  SlotsDocument,
-} from 'src/schemas/slots-schema';
+  BOOKINGDETAILS_MODEL,
+  BookingDetailsDocument,
+} from 'src/schemas/booking-details-schema';
+import { SLOTS_MODEL, SlotsDocument } from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
-import { MailerService } from '../../mail/mail.service';
-import { BOOKINGS_MODEL, BookingsDocument } from 'src/schemas/bookings-schema';
-import { BookingsDTO } from 'src/dtos/bookingsDTO';
 import { BookingStatus } from 'src/utils/enums';
+import { MailerService } from '../../mail/mail.service';
 
 @Injectable()
 export class BookslotsService {
   constructor(
-    @InjectModel(SLOTSBOOKING_MODEL)
-    private readonly slotBookingModel: Model<SlotBookingsDocument>,
-
     @InjectModel(USER_MODEL)
     private readonly userModel: Model<UserDocument>,
 
     @InjectModel(SLOTS_MODEL) private readonly slotModel: Model<SlotsDocument>,
-    @InjectModel(BOOKINGS_MODEL)
-    private readonly bookingsModel: Model<BookingsDocument>,
+    @InjectModel(BOOKINGDETAILS_MODEL)
+    private readonly bookingsModel: Model<BookingDetailsDocument>,
 
     private readonly mailerService: MailerService,
   ) {}
@@ -93,6 +88,7 @@ export class BookslotsService {
       userName: userDetails.name,
       customerName: customerDetails.name,
       slotTimeId,
+      slotDateId,
       status: BookingStatus.BOOKED,
     });
 
