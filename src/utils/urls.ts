@@ -39,3 +39,7 @@ export const slotBookingUrls = {
   myBookings: '/myBookings',
   myAppointments: '/myAppointments',
 };
+
+export const reviewAndReportsUrls = {
+  review: 'review',
+};

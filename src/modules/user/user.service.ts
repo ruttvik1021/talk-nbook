@@ -9,7 +9,7 @@ import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { userMessages } from 'src/utils/constants';
 import { RoleEnums } from 'src/utils/enums';
-import { validateImageSize } from 'src/utils/image-size-validation';
+import { validateImageSize } from 'src/utils/validators/image-size-validation';
 
 @Injectable()
 export class UserService {
