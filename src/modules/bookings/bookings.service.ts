@@ -28,8 +28,6 @@ export class BookingsService {
     const serviceProviderDetails = await this.userModel.findById(userId);
     const bookingDetails = await this.slotsModel.findById(slotDateId);
 
-    console.log({ id, customerId, userId, slotDateId, slotTimeId });
-
     const bookingTime = bookingDetails.slots.find((item) =>
       new ObjectId(item.id).equals(new ObjectId(slotTimeId)),
     );
