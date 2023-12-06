@@ -8,6 +8,7 @@ import { SLOTS_MODEL, SlotsDocument } from 'src/schemas/slots-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
 import { slotMessages, userMessages } from 'src/utils/constants';
 import { BookingStatus } from 'src/utils/enums';
+import * as moment from 'moment';
 
 @Injectable()
 export class SlotsService {
@@ -22,28 +23,11 @@ export class SlotsService {
     return user;
   }
 
-  private isOverlap(interval1: any, interval2: any): boolean {
-    const from1 = new Date(`2000-01-01T${interval1.from}`);
-    const to1 = new Date(`2000-01-01T${interval1.to}`);
-
-    const from2 = new Date(`2000-01-01T${interval2.from}`);
-    const to2 = new Date(`2000-01-01T${interval2.to}`);
-
-    return from1 < to2 && to1 > from2;
-  }
-
-  private isValidTimeRange(from: string, to: string): boolean {
-    const fromTime = new Date(`1970-01-01T${from}`);
-    const toTime = new Date(`1970-01-01T${to}`);
-    return fromTime < toTime;
-  }
-
   private overlapCheck(value: any): boolean {
     for (let i = 0; i < value.length; i++) {
       const fromValue = value[i].from;
       const toValue = value[i].to;
-
-      if (!this.isValidTimeRange(fromValue, toValue)) {
+      if (!moment(fromValue).isBefore(moment(toValue))) {
         throw new BadRequestException(
           slotMessages.errors.toTimeMustBeGreaterThanFromTime,
         );
@@ -53,7 +37,10 @@ export class SlotsService {
       const nextIntervals = value.slice(i + 1);
 
       for (const nextInterval of nextIntervals) {
-        if (this.isOverlap(currentInterval, nextInterval)) {
+        if (
+          moment(currentInterval.from).isBefore(moment(nextInterval.to)) &&
+          moment(currentInterval.to).isAfter(moment(nextInterval.from))
+        ) {
           return false;
         }
       }
@@ -72,6 +59,35 @@ export class SlotsService {
     if (isSlotCreatedForTheDate)
       throw new BadRequestException(
         slotMessages.errors.slotsAlreadyCreatedForThisDateUpdateThisDate,
+      );
+
+    const earliestDate = moment.min(
+      body.slots.map((slot) => moment(slot.from)),
+    );
+
+    // Check if the earliest date is after the given date
+    const isAfter = earliestDate.isAfter(body.date);
+    if (!isAfter)
+      throw new BadRequestException(
+        slotMessages.errors.slotMustBeAfterTheDateProvided,
+      );
+
+    const rangeStart = moment(body.date);
+    const rangeEnd = moment(body.date).add(24, 'hours'); // Assuming a 24-hour range
+
+    // Check if all slots are within the range
+    const allSlotsWithinRange = body.slots.every((slot) => {
+      const slotStart = moment(slot.from);
+      const slotEnd = moment(slot.to);
+
+      return (
+        slotStart.isSameOrAfter(rangeStart) && slotEnd.isSameOrBefore(rangeEnd)
+      );
+    });
+
+    if (!allSlotsWithinRange)
+      throw new BadRequestException(
+        slotMessages.errors.slotTimingsMustBeWithinADaysRange,
       );
 
     if (this.overlapCheck(body.slots)) {
@@ -93,13 +109,58 @@ export class SlotsService {
     throw new BadRequestException(slotMessages.errors.datesOverLap);
   }
 
-  async updateSlot(req: decodedRequest, body: UpdateSlotDTO, id: string) {
+  async updateSlot(req: decodedRequest, body: UpdateSlotDTO) {
     const user = await this.findUserByEmail(req.user.email);
+
+    const earliestDate = moment.min(
+      body.slots.map((slot) => moment(slot.from)),
+    );
+
+    console.log('earliestDate', earliestDate);
+
+    // Check if the earliest date is after the given date
+    const isAfter = earliestDate.isAfter(body.date);
+    if (!isAfter)
+      throw new BadRequestException(
+        slotMessages.errors.slotMustBeAfterTheDateProvided,
+      );
+
+    console.log('isAfter', isAfter);
+    const rangeStart = moment(body.date);
+    const rangeEnd = moment(body.date).add(24, 'hours'); // Assuming a 24-hour range
+
+    // Check if all slots are within the range
+    const allSlotsWithinRange = body.slots.every((slot) => {
+      const slotStart = moment(slot.from);
+      const slotEnd = moment(slot.to);
+
+      return (
+        slotStart.isSameOrAfter(rangeStart) && slotEnd.isSameOrBefore(rangeEnd)
+      );
+    });
+
+    console.log('allSlotsWithinRange', allSlotsWithinRange);
+    if (!allSlotsWithinRange)
+      throw new BadRequestException(
+        slotMessages.errors.slotTimingsMustBeWithinADaysRange,
+      );
+
     if (this.overlapCheck(body.slots)) {
       const slot = await this.slotModel.findOneAndUpdate(
-        { _id: id, userId: user.id },
-        { ...body },
-        { returnOriginal: false },
+        { _id: body.id, userId: user.id },
+        {
+          $set: { ...body }, // Set the fields you want to update
+          $unset: {
+            id: 1, // Exclude id from the top-level object
+            userId: 1, // Exclude userId from the top-level object
+            'slots.$[elem].status': 1, // Exclude status from each element in the slots array
+            'slots.$[elem].id': 1, // Exclude id from each element in the slots array
+          },
+        },
+        {
+          arrayFilters: [{ 'elem.id': { $exists: true } }],
+          returnOriginal: false,
+        },
       );
       if (!slot)
         throw new BadRequestException(
@@ -109,13 +170,21 @@ export class SlotsService {
         message: slotMessages.messages.slotUpdated,
       };
     }
-    return { message: slotMessages.errors.datesOverLap };
+    throw new BadRequestException(slotMessages.errors.datesOverLap);
   }
 
   async getSlots(req: decodedRequest) {
     const user = await this.findUserByEmail(req.user.email);
     const slotsList = await this.slotModel
-      .find({ userId: user.id })
+      .find(
+        { userId: user.id },
+        {
+          id: 0, // Exclude id from the top-level object
+          userId: 0, // Exclude userId from the top-level object
+          'slots.status': 0, // Exclude status from each element in the slots array
+          'slots.id': 0, // Exclude id from each element in the slots array
+        },
+      )
       .sort({ date: 1, 'slots.from': 1 })
       .exec();
 

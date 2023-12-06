@@ -114,6 +114,9 @@ export const slotMessages = {
       'Slot timing passed, you cannot cancel the slot.',
     noBookingFound: 'No Booking found',
     slotDateExpired: 'Slot date expired',
+    slotMustBeAfterTheDateProvided: 'Slot must be above the provided date',
+    slotTimingsMustBeWithinADaysRange:
+      'Slot timings must be within a days range',
   },
   messages: {
     slotCreated: 'Slot created successfully',

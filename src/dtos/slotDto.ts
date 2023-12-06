@@ -5,7 +5,6 @@ import {
   IsDateString,
   IsMongoId,
   IsString,
-  Matches,
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
@@ -13,25 +12,17 @@ import { slotMessages } from 'src/utils/constants';
 import { BookingStatus } from 'src/utils/enums';
 
 class TimeSlotDto {
-  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-    message: slotMessages.errors.slotTimeInvalid,
-  })
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   from: Date;
 
-  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-    message: slotMessages.errors.slotTimeInvalid,
-  })
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   to: Date;
 }
 class UpdateTimeSlotDto {
-  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-    message: slotMessages.errors.slotTimeInvalid,
-  })
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   from: Date;
 
-  @Matches(/^(?:[01]\d|2[0-3]):[0-5]\d$/, {
-    message: slotMessages.errors.slotTimeInvalid,
-  })
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   to: Date;
 
   @IsString()
@@ -39,7 +30,7 @@ class UpdateTimeSlotDto {
 }
 
 export class SlotDTO {
-  @IsDateString()
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   date: Date;
 
   @ValidateIf((o) => (o.date ? true : false))
@@ -50,7 +41,7 @@ export class SlotDTO {
   slots?: TimeSlotDto[];
 }
 export class UpdateSlotDTO {
-  @IsDateString()
+  @IsDateString({}, { message: slotMessages.errors.slotTimeInvalid })
   date: Date;
 
   @ValidateIf((o) => (o.date ? true : false))
