@@ -26,13 +26,9 @@ export class SlotsController {
   }
 
   @UseGuards(ServiceProviderGuard)
-  @Put(slotsUrl.slotUrlId)
-  async updateSlot(
-    @Req() req: Request,
-    @Body() body: UpdateSlotDTO,
-    @Param('id', ObjectIdValidationPipe) id: string,
-  ) {
-    return this.slotService.updateSlot(req, body, id);
+  @Put(slotsUrl.slotUrl)
+  async updateSlot(@Req() req: Request, @Body() body: UpdateSlotDTO) {
+    return this.slotService.updateSlot(req, body);
   }
 
   @UseGuards(ServiceProviderGuard)
