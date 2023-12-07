@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,6 +10,7 @@ import { Model } from 'mongoose';
 import { MailerService } from 'src/mail/mail.service';
 import { SEND_OTP_MODEL, SendOtpDocument } from 'src/schemas/sendotp-schema';
 import { USER_MODEL, UserDocument } from 'src/schemas/user-schema';
+import { RoleEnums } from 'src/utils/enums';
 import { otpMessages } from '../../utils/constants';
 
 @Injectable()
@@ -24,7 +29,12 @@ export class OtpflowService {
     private readonly mailerService: MailerService,
   ) {}
 
-  async sendOtpToUser(userEmail: string) {
+  async sendOtpToUser(userEmail: string, userType: RoleEnums) {
+    if (userType === RoleEnums.SUPERADMIN) {
+      const user = await this.userModel.findOne({ email: userEmail });
+      if (!user || user.role !== RoleEnums.SUPERADMIN)
+        throw new UnauthorizedException();
+    }
     const validSeconds = this.configService.get('OTP_VALID_SECOND');
     const generatedOtp = Math.floor(100000 + Math.random() * 900000);
     const validTill = new Date(new Date().getTime() + validSeconds * 1000);
@@ -50,9 +60,9 @@ export class OtpflowService {
         validfor: validSeconds,
       };
     }
-    if (new Date(getEmailLog.validTill) > new Date()) {
-      throw new BadRequestException(otpMessages.errors.orpAlreadySent);
-    }
+    // if (new Date(getEmailLog.validTill) > new Date()) {
+    //   throw new BadRequestException(otpMessages.errors.orpAlreadySent);
+    // }
     const updatedOtp = await this.sendOtpModel.findOneAndUpdate(
       {
         email: userEmail,

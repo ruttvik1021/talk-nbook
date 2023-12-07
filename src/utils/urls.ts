@@ -1,6 +1,7 @@
 export const otpFlowUrls = {
   baseUrl: '/otp',
   sendOtp: '/sendotp',
+  sendAdminOtp: '/admin/sendotp',
   validateOtp: '/validateotp',
 };
 
