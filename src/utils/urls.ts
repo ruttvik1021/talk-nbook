@@ -12,6 +12,7 @@ export const userUrls = {
   getUsersList: `/allUsers`,
   getServiceProvidersList: `/allServiceProviders`,
   getUserById: `/user/:id`,
+  deactivateUserById: `/deactivate/user/:id`,
   getUsersBySpecialization: '/user/specialization/:id',
   userRoles: `/user/roles`,
   getAllLanguages: `/getAllLanguages`,
@@ -22,6 +23,7 @@ export const masterAuthorizedBaseUrls = '/api/master';
 
 export const masterDataUrls = {
   specializations: '/specializations',
+  masterSpecializations: '/admin/specializations',
   updateSpecialization: '/specialization/:id',
   languages: '/languages',
   updateLanguage: '/language/:id',

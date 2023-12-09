@@ -48,4 +48,11 @@ export class UserController {
   async getUserById(@Param('id', ObjectIdValidationPipe) id: string) {
     return this.userService.getUserById(id);
   }
+
+  @Get(userUrls.deactivateUserById)
+  @Roles([RoleEnums.SUPERADMIN])
+  @UseGuards(RolesGuard)
+  async deactivateUserById(@Param('id', ObjectIdValidationPipe) id: string) {
+    return this.userService.deactivateUserById(id);
+  }
 }

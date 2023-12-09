@@ -191,17 +191,44 @@ export class UserService {
   async getAllUsersList(body: PaginationDTO) {
     const { limit, offset } = body;
     const users = await this.userModel
-      .find({
-        role: RoleEnums.USER,
-      })
+      .find(
+        {
+          role: RoleEnums.USER,
+        },
+        {
+          name: 1,
+          isProfileComplete: 1,
+          isServiceProvider: 1,
+          profilePhoto: 1,
+          email: 1,
+          id: 1,
+          mobileNumber: 1,
+          isActive: 1,
+        },
+      )
       .skip(offset)
       .limit(limit)
       .exec();
-    return users;
+
+    const total = await this.userModel.countDocuments({ role: RoleEnums.USER });
+
+    return { users, total };
   }
 
   async getUserById(id: string) {
     const user = await this.userModel.findById(id);
+    if (!user) throw new BadRequestException(userMessages.errors.noUserFound);
+    return user;
+  }
+
+  async deactivateUserById(id: string) {
+    const user = await this.userModel.findByIdAndUpdate(
+      id,
+      {
+        isActive: false,
+      },
+      { returnOriginal: false },
+    );
     if (!user) throw new BadRequestException(userMessages.errors.noUserFound);
     return user;
   }
