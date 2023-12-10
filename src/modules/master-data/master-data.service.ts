@@ -2,7 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { languagesMessages, specializationMessages } from 'src/utils/constants';
-import { AddLanguageDTO, AddSpecializationDTO } from 'src/dtos/masterDto';
+import {
+  AddLanguageDTO,
+  AddSpecializationDTO,
+  PaginationDTO,
+} from 'src/dtos/masterDto';
 import { RoleEnums } from 'src/utils/enums';
 import { decodedRequest } from 'src/middlewares/token-validator-middleware';
 import {
@@ -127,8 +131,9 @@ export class MasterDataService {
     };
   }
 
-  async getAllSpecializations(req: decodedRequest) {
+  async getAllSpecializations(req: decodedRequest, body: PaginationDTO) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
+    const { limit, offset } = body;
     const userSpecializationPreferences = await this.userModel.findOne(
       {
         email: req.user.email,
@@ -138,7 +143,9 @@ export class MasterDataService {
     const query = isSuperAdmin ? {} : { isActive: true };
     const specializations = await this.specializationModel
       .find(query)
-      .sort({ specialization: 1 });
+      .sort({ specialization: 1 })
+      .limit(limit)
+      .skip(offset);
     if (
       !isSuperAdmin &&
       userSpecializationPreferences.prefferedSpecializations.length
@@ -159,7 +166,10 @@ export class MasterDataService {
         }
       });
     }
-    return specializations;
+
+    const total = await this.specializationModel.countDocuments(query);
+
+    return { total, specializations };
   }
 
   async addNewSpecialization(body: AddSpecializationDTO) {
@@ -193,9 +203,11 @@ export class MasterDataService {
       throw new BadRequestException(
         specializationMessages.errors.specializationExist,
       );
-    const usersHavingLanguage = await this.userModel.find({
-      specializations: { $in: [id] },
-    });
+    const usersHavingLanguage = await this.userModel
+      .find({
+        specializations: { $elemMatch: { specializationId: id } },
+      })
+      .exec();
     if (
       usersHavingLanguage.length &&
       body.specialization !== existingDoc.specialization
@@ -220,9 +232,12 @@ export class MasterDataService {
   }
 
   async deleteSpecialization(id: string) {
-    const usersHavingSpecialization = await this.userModel.find({
-      specializations: { $in: [id] },
-    });
+    const usersHavingSpecialization = await this.userModel
+      .find({
+        specializations: { $elemMatch: { specializationId: id } },
+      })
+      .exec();
+
     if (usersHavingSpecialization.length) {
       const updatedSpecialization =
         await this.specializationModel.findByIdAndUpdate(

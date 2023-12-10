@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -36,6 +37,10 @@ export class AddSpecializationDTO {
   @IsOptional()
   @IsBoolean()
   preffered: boolean;
+
+  @IsOptional()
+  @IsMongoId()
+  id: string;
 }
 
 export class PaginationDTO {

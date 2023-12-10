@@ -11,7 +11,11 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Roles } from 'src/decorators/roles.decorator';
-import { AddLanguageDTO, AddSpecializationDTO } from 'src/dtos/masterDto';
+import {
+  AddLanguageDTO,
+  AddSpecializationDTO,
+  PaginationDTO,
+} from 'src/dtos/masterDto';
 import { RoleEnums } from 'src/utils/enums';
 import { RolesGuard } from 'src/guards/role.guard';
 import { ObjectIdValidationPipe } from 'src/pipes/objectIdValidationPipe';
@@ -51,14 +55,17 @@ export class MasterDataController {
     return this.masterService.deleteLanguage(id);
   }
 
-  @Get(masterDataUrls.specializations)
-  async getAllSpecializations(@Req() req: Request) {
-    return this.masterService.getAllSpecializations(req);
+  @Post(masterDataUrls.specializations)
+  async getAllSpecializations(
+    @Req() req: Request,
+    @Body() body: PaginationDTO,
+  ) {
+    return this.masterService.getAllSpecializations(req, body);
   }
 
   @Roles([RoleEnums.SUPERADMIN])
   @UseGuards(RolesGuard)
-  @Post(masterDataUrls.specializations)
+  @Post(masterDataUrls.addSpecializations)
   async addNewSpecialization(@Body() body: AddSpecializationDTO) {
     return this.masterService.addNewSpecialization(body);
   }
