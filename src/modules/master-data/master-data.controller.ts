@@ -26,14 +26,14 @@ import { MasterDataService } from './master-data.service';
 export class MasterDataController {
   constructor(private masterService: MasterDataService) {}
 
-  @Get(masterDataUrls.languages)
-  async getAllLanguages(@Req() req: Request) {
-    return this.masterService.getAllLanguages(req);
+  @Post(masterDataUrls.languages)
+  async getAllLanguages(@Req() req: Request, @Body() body: PaginationDTO) {
+    return this.masterService.getAllLanguages(req, body);
   }
 
   @Roles([RoleEnums.SUPERADMIN])
   @UseGuards(RolesGuard)
-  @Post(masterDataUrls.languages)
+  @Post(masterDataUrls.addLanguage)
   async addnewLanguage(@Body() body: AddLanguageDTO) {
     return this.masterService.addNewLanguage(body);
   }

@@ -28,8 +28,9 @@ export class MasterDataService {
     @InjectModel(USER_MODEL) private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async getAllLanguages(req: decodedRequest) {
+  async getAllLanguages(req: decodedRequest, body: PaginationDTO) {
     const isSuperAdmin = req.user.role === RoleEnums.SUPERADMIN;
+    const { limit, offset } = body;
     const userLanguagePreferences = await this.userModel.findOne(
       {
         email: req.user.email,
@@ -39,7 +40,9 @@ export class MasterDataService {
     const query = isSuperAdmin ? {} : { isActive: true };
     const languages = await this.languageModel
       .find(query)
-      .sort({ language: 1 });
+      .sort({ language: 1 })
+      .limit(limit)
+      .skip(offset);
 
     if (!isSuperAdmin && userLanguagePreferences.languages.length) {
       languages.forEach((item: any) => {
@@ -47,7 +50,8 @@ export class MasterDataService {
       });
     }
 
-    return languages;
+    const total = await this.languageModel.countDocuments(query);
+    return { total, languages };
   }
 
   async addNewLanguage(body: AddLanguageDTO) {

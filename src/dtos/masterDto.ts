@@ -22,6 +22,10 @@ export class AddLanguageDTO {
   @IsOptional()
   @IsBoolean()
   preffered: boolean;
+
+  @IsOptional()
+  @IsMongoId()
+  id: string;
 }
 
 export class AddSpecializationDTO {

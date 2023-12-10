@@ -23,10 +23,11 @@ export const masterAuthorizedBaseUrls = '/api/master';
 
 export const masterDataUrls = {
   specializations: '/specializations',
-  addSpecializations: '/add/specializations',
+  addSpecializations: '/add/specialization',
   masterSpecializations: '/admin/specializations',
   updateSpecialization: '/specialization/:id',
   languages: '/languages',
+  addLanguage: 'add/language',
   updateLanguage: '/language/:id',
   roles: '/roles',
 };
