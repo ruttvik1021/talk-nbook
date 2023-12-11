@@ -58,6 +58,7 @@ export class OtpflowService {
       return {
         message: otpMessages.messages.otpSent,
         validfor: validSeconds,
+        otp: generatedOtp,
       };
     }
     // if (new Date(getEmailLog.validTill) > new Date()) {
@@ -85,6 +86,7 @@ export class OtpflowService {
     return {
       message: otpMessages.messages.otpSent,
       validfor: validSeconds,
+      otp: generatedOtp,
     };
   }
 
