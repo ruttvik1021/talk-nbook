@@ -45,13 +45,13 @@ export class OtpflowService {
         validTill: validTill,
         otp: generatedOtp,
       });
-      await this.mailerService.sendMail({
-        to: userEmail,
-        subject: 'Otp for Login',
-        otp: `${generatedOtp}`,
-        type: 'Signup',
-        validfor: validSeconds,
-      });
+      // await this.mailerService.sendMail({
+      //   to: userEmail,
+      //   subject: 'Otp for Login',
+      //   otp: `${generatedOtp}`,
+      //   type: 'Signup',
+      //   validfor: validSeconds,
+      // });
       if (!otpSent)
         throw new BadRequestException(otpMessages.errors.somethingWentWrong);
 
@@ -74,13 +74,13 @@ export class OtpflowService {
       },
     );
     await this.sendOtpModel.deleteMany({ validTill: { $lt: new Date() } });
-    await this.mailerService.sendMail({
-      to: userEmail,
-      subject: 'Otp for Login',
-      otp: `${generatedOtp}`,
-      type: 'Login',
-      validfor: validSeconds,
-    });
+    // await this.mailerService.sendMail({
+    //   to: userEmail,
+    //   subject: 'Otp for Login',
+    //   otp: `${generatedOtp}`,
+    //   type: 'Login',
+    //   validfor: validSeconds,
+    // });
     if (!updatedOtp)
       throw new BadRequestException(otpMessages.errors.somethingWentWrong);
     return {
